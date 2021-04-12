@@ -16,7 +16,7 @@ class TopicWidget : public QWidget
 
   public:
     TopicWidget();
-    void setGraph(const Graph & graph, const QTreeWidget * treewidget, const NodeWidget * nodewidget);
+    void setGraph(const tkgism_ros_tools::Graph & graph, const QTreeWidget * treewidget, const NodeWidget * nodewidget);
 
   public slots:
     void setTopic(QTreeWidgetItem * curr, QTreeWidgetItem * prev);
@@ -32,7 +32,7 @@ class NodeWidget : public QWidget
 
   public:
     NodeWidget();
-    void setGraph(const Graph & graph, const QTreeWidget * treewidget, const TopicWidget * topicwidget);
+    void setGraph(const tkgism_ros_tools::Graph & graph, const QTreeWidget * treewidget, const TopicWidget * topicwidget);
 
   public slots:
     void setNode(QTreeWidgetItem * curr, QTreeWidgetItem * prev);

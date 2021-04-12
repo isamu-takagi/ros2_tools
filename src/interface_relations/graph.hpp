@@ -3,6 +3,8 @@
 #include <map>
 #include "rclcpp/rclcpp.hpp"
 
+namespace tkgism_ros_tools {
+
 struct Graph;
 struct GraphTopic;
 struct GraphNode;
@@ -11,6 +13,7 @@ struct GraphLink;
 struct Graph
 {
   void update(const rclcpp::Node::SharedPtr & node);
+  void print_topics();
 
   std::map<std::string, std::unique_ptr<GraphNode>> nodes;
   std::map<std::string, std::unique_ptr<GraphTopic>> topics;
@@ -22,8 +25,10 @@ struct GraphTopic
   GraphTopic(const std::string & name);
 
   std::string name;
-  std::vector<GraphNode *> src_nodes;
-  std::vector<GraphNode *> dst_nodes;
+  std::vector<GraphLink *> pub_links;
+  std::vector<GraphLink *> sub_links;
+  // std::vector<GraphNode *> src_nodes;
+  // std::vector<GraphNode *> dst_nodes;
 };
 
 struct GraphNode
@@ -31,8 +36,10 @@ struct GraphNode
   GraphNode(const std::string & name);
 
   std::string name;
-  std::vector<GraphTopic *> pub_topics;
-  std::vector<GraphTopic *> sub_topics;
+  std::vector<GraphLink *> pub_links;
+  std::vector<GraphLink *> sub_links;
+  // std::vector<GraphTopic *> pub_topics;
+  // std::vector<GraphTopic *> sub_topics;
 };
 
 struct GraphLink
@@ -46,3 +53,5 @@ struct GraphLink
   std::string durability;
   bool is_publish;
 };
+
+}  // namespace tkgism_ros_tools

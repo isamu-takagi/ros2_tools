@@ -24,17 +24,24 @@ include_directories(
 )
 
 add_executable(interface_relations
-  src/main.cpp
-  src/window.hpp
-  src/window.cpp
-  src/graph.hpp
-  src/graph.cpp
+  src/interface_relations/main.cpp
+  src/interface_relations/graph.hpp
+  src/interface_relations/graph.cpp
 )
 ament_target_dependencies(interface_relations rclcpp)
-target_link_libraries(interface_relations Qt5::Core Qt5::Widgets)
+
+add_executable(interface_relations_gui
+  src/interface_relations/maingui.cpp
+  src/interface_relations/graph.hpp
+  src/interface_relations/graph.cpp
+  src/interface_relations/window.hpp
+  src/interface_relations/window.cpp
+)
+ament_target_dependencies(interface_relations_gui rclcpp)
+target_link_libraries(interface_relations_gui Qt5::Core Qt5::Widgets)
 
 install(
-  TARGETS interface_relations
+  TARGETS interface_relations interface_relations_gui
   DESTINATION lib/${PROJECT_NAME}
 )
 

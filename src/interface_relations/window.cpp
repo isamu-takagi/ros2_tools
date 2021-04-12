@@ -22,7 +22,7 @@ TopicWidget::TopicWidget()
   setLayout(layout);
 }
 
-void TopicWidget::setGraph(const Graph & graph, const QTreeWidget * treewidget, const NodeWidget * nodewidget)
+void TopicWidget::setGraph(const tkgism_ros_tools::Graph & graph, const QTreeWidget * treewidget, const NodeWidget * nodewidget)
 {
   for(const auto & link : graph.links)
   {
@@ -70,7 +70,7 @@ NodeWidget::NodeWidget()
   setLayout(layout);
 }
 
-void NodeWidget::setGraph(const Graph & graph, const QTreeWidget * treewidget, const TopicWidget * topicwidget)
+void NodeWidget::setGraph(const tkgism_ros_tools::Graph & graph, const QTreeWidget * treewidget, const TopicWidget * topicwidget)
 {
   for(const auto & link : graph.links)
   {
@@ -124,7 +124,7 @@ MyWindow::MyWindow(const rclcpp::Node::SharedPtr & node) : QMainWindow(), node_(
   splitter->addWidget(widget);
   setCentralWidget(splitter);
 
-  Graph graph;
+  tkgism_ros_tools::Graph graph;
   graph.update(node_);
 
   for (const auto & topic : graph.topics)
