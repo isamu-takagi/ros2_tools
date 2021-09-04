@@ -16,15 +16,19 @@ ament_auto_find_build_dependencies()
 
 message(STATUS "[NODEIF] ${PROJECT_NAME} CMakeList")
 
-nodeif_generate(${PROJECT_NAME}
-  nodeif/talker/SendChatter
-  nodeif/listener/RecvChatter
+nodeif_generate(${PROJECT_NAME}_nodeif
+  nodeif/talker/SendChatter.yaml
+  nodeif/listener/RecvChatter.yaml
 )
 
-#ament_auto_add_library(${PROJECT_NAME} SHARED
-#  src/talker.cpp
-#  src/listener.cpp
-#)
+nodeif_get_typesupport_target(nodeif_target "${PROJECT_NAME}_nodeif" "cpp")
+
+ament_auto_add_library(${PROJECT_NAME} SHARED
+  src/talker.cpp
+  src/listener.cpp
+)
+target_link_libraries(${PROJECT_NAME} "${nodeif_target}")
+
 #rclcpp_components_register_node(${PROJECT_NAME}
 #  PLUGIN "Talker"
 #  EXECUTABLE talker

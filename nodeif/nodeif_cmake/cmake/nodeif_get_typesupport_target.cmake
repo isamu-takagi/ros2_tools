@@ -12,4 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-message(STATUS "[NODEIF] nodeif_generator_py-ament_package_extension")
+function(nodeif_get_typesupport_target variable target typesupport)
+
+  if(NOT TARGET ${target})
+    message(FATAL_ERROR "${target} is not a CMake target. Maybe nodeif_generate was given a different target name?")
+  endif()
+
+  set(output_target "${target}__${typesupport}")
+
+  if(NOT TARGET ${output_target})
+    message(FATAL_ERROR "${output_target} is not a CMake target - maybe the typesupport '${typesupport}' doesn't exist?")
+  endif()
+
+  set("${variable}" "${output_target}" PARENT_SCOPE)
+
+endfunction()

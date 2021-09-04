@@ -16,6 +16,7 @@ message(STATUS "[NODEIF] nodeif_cmake-extra")
 
 # register nodeif functions
 include("${nodeif_cmake_DIR}/nodeif_generate.cmake")
+include("${nodeif_cmake_DIR}/nodeif_get_typesupport_target.cmake")
 
 # register ament_package hook
 ament_register_extension("ament_package" "nodeif_cmake" "nodeif_ament_package_hook.cmake")

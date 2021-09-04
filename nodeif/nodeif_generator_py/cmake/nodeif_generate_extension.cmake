@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-message(STATUS "[NODEIF]   nodeif_generator_py-nodeif_generate_extension")
+message(STATUS "[NODEIF] nodeif_generator_py-nodeif_generate_extension")

@@ -16,6 +16,3 @@ message(STATUS "[NODEIF] nodeif_generator_cpp-extra")
 
 # register nodeif_generate hook
 ament_register_extension("nodeif_generate" "nodeif_generator_cpp" "nodeif_generate_extension.cmake")
-
-# register ament_package hook
-ament_register_extension("ament_auto_package" "nodeif_generator_cpp" "ament_package_extension.cmake")
