@@ -17,6 +17,19 @@ ament_auto_find_build_dependencies()
 message(STATUS "[NODEIF] ${PROJECT_NAME} CMakeList")
 nodeif_generate(param1)
 
+ament_auto_add_library(${PROJECT_NAME} SHARED
+  src/talker.cpp
+  src/listener.cpp
+)
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "Talker"
+  EXECUTABLE talker
+)
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "Listener"
+  EXECUTABLE listener
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
