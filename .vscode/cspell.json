@@ -1,0 +1,21 @@
+{
+    "version": "0.2",
+    "language": "en",
+    "words": [
+        // ===== ros2 =====
+        "rclcpp",
+        "schematypens",
+        "buildtool",
+        // ===== cmake =====
+        "cmake",
+        "endforeach",
+        "GNUCXX",
+        "Wpedantic",
+        "Wextra",
+        "Werror",
+        // ===== cpp =====
+        "chrono",
+        // ===== user name =====
+        "Takagi", "Isamu"
+    ]
+}
