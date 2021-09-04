@@ -1,0 +1,6 @@
+type: subscription
+data: std_msgs/msg/String
+name: ~/message
+qos:
+  buffer_size: 1
+  durability: transient_local

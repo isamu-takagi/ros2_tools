@@ -1,0 +1,27 @@
+#ifndef @NODEIF_INCLUDE_GUARD@
+#define @NODEIF_INCLUDE_GUARD@
+
+#include "rclcpp/rclcpp.hpp"
+#include "@NODEIF_DATA_HEADER@"
+
+namespace @NODEIF_NAMESPACE@
+{
+
+struct @NODEIF_TRAITS@
+{
+  using DataType = @NODEIF_DATA_NAME@;
+  using Behavior = rclcpp::@NODEIF_TYPE@<DataType>;
+
+  static std::string name()
+  {
+    return @NODEIF_NAME@;
+  }
+  static rclcpp::QoS qos()
+  {
+    return @NODEIF_QOS_CODE@;
+  }
+};
+
+}  // namespace @NODEIF_NAMESPACE@
+
+#endif  // @NODEIF_INCLUDE_GUARD@

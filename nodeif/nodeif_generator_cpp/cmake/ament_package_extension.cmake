@@ -12,10 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-message(STATUS "[NODEIF] nodeif_generator_cpp-extra")
+message(STATUS "[NODEIF] nodeif_generator_cpp-ament_package_extension")
 
-# register nodeif_generate hook
-ament_register_extension("nodeif_generate" "nodeif_generator_cpp" "nodeif_generate_extension.cmake")
+normalize_path(_build_path "${PROJECT_BINARY_DIR}/nodeif_generate_cpp")
 
-# register ament_package hook
-ament_register_extension("ament_auto_package" "nodeif_generator_cpp" "ament_package_extension.cmake")
+message(STATUS "[NODEIF]     ===== install =====")
+if(EXISTS ${_build_path}/output)
+    install(
+        DIRECTORY ${_build_path}/output/
+        DESTINATION include/${PROJECT_NAME}
+        PATTERN *.hpp
+    )
+    ament_export_include_directories(include)
+endif()

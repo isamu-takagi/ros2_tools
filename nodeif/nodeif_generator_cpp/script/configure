@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+
+import nodeif_generator_cpp
+nodeif_generator_cpp.configure()

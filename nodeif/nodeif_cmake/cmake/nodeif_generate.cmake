@@ -12,9 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-macro(nodeif_generate target)
+macro(nodeif_generate _project)
 
-    message(STATUS "[NODEIF] nodeif_generate ${target}")
-    ament_execute_extensions("nodeif_generate")
+    message(STATUS "[NODEIF] nodeif_generate: package=${_project}")
+    foreach(_target_path ${ARGN})
+
+        string(REGEX REPLACE "/" "-" _target_name "${_target_path}")
+        set(nodeif_generate_TARGET "${_target_name}")
+        set(nodeif_generate_SOURCE "${_target_path}")
+
+        add_custom_target(${nodeif_generate_TARGET} ALL SOURCES "${nodeif_generate_SOURCE}.yaml")
+        ament_execute_extensions("nodeif_generate")
+
+    endforeach()
 
 endmacro(nodeif_generate)

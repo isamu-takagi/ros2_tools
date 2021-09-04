@@ -10,8 +10,10 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR python)
+
 install(
-  DIRECTORY cmake
+  DIRECTORY cmake script template
   DESTINATION share/${PROJECT_NAME}
 )
 

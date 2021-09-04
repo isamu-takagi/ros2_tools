@@ -1,0 +1,6 @@
+type: publisher
+data: std_msgs/msg/String
+name: ~/message
+qos:
+  buffer_size: 10
+  durability: transient_local
