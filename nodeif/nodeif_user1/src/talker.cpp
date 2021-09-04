@@ -19,12 +19,13 @@
 #include <utility>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
+#include "nodeif/nodeif.hpp"
+#include "talker-nodeif.hpp"
 
-class Talker : public rclcpp::Node
+class Talker : public nodeif::NodeIF
 {
 public:
-  explicit Talker(const rclcpp::NodeOptions & options) : Node("talker", options)
+  explicit Talker(const rclcpp::NodeOptions & options) : NodeIF("talker", options)
   {
     using namespace std::chrono_literals;
 
@@ -37,8 +38,7 @@ public:
         pub_->publish(std::move(msg_));
       };
 
-    rclcpp::QoS qos(rclcpp::KeepLast(7));
-    pub_ = this->create_publisher<std_msgs::msg::String>("chatter", qos);
+    pub_ = this->create_publisher<SendStringMessage>();
     timer_ = this->create_wall_timer(1s, publish_message);
   }
 

@@ -1,4 +1,3 @@
-// Copyright 2014 Open Source Robotics Foundation, Inc.
 // Copyright 2021 Takagi Isamu
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,27 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "gtest/gtest.h"
 #include "rclcpp/rclcpp.hpp"
 #include "nodeif/nodeif.hpp"
-#include "talker-nodeif.hpp"
 
-class Listener : public nodeif::NodeIF
+TEST(nodeif, instantiate) {
+  nodeif::NodeIF node("nodeif_test");
+}
+
+int main(int argc, char ** argv)
 {
-public:
-  explicit Listener(const rclcpp::NodeOptions & options) : NodeIF("listener", options)
-  {
-    auto callback =
-      [this](std_msgs::msg::String::ConstSharedPtr msg) -> void
-      {
-        RCLCPP_INFO(this->get_logger(), "I heard: [%s]", msg->data.c_str());
-      };
-
-    sub_ = create_subscription<RecvStringMessage>(callback);
-  }
-
-private:
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_;
-};
-
-#include "rclcpp_components/register_node_macro.hpp"
-RCLCPP_COMPONENTS_REGISTER_NODE(Listener)
+  testing::InitGoogleTest(&argc, argv);
+  rclcpp::init(argc, argv);
+  bool result = RUN_ALL_TESTS();
+  rclcpp::shutdown();
+  return result;
+}
