@@ -20,7 +20,7 @@
 namespace nodeif_user1
 {
 
-class Listener : public nodeifs::NodeIF
+class Listener : public nodeif::NodeIF
 {
 public:
   explicit Listener(const rclcpp::NodeOptions & options) : NodeIF("listener", options)
@@ -31,7 +31,7 @@ public:
         RCLCPP_INFO(this->get_logger(), "I heard: [%s]", msg->data.c_str());
       };
 
-    sub_ = create_subscription<nodeif::RecvChatter>(callback);
+    sub_ = create_subscription<socket::RecvChatter>(callback);
   }
 
 private:

@@ -7,7 +7,7 @@
 namespace @NODEIF_NAMESPACE@
 {
 
-struct @NODEIF_TRAITS@
+struct @NODEIF_SOCKET@
 {
   using DataType = @NODEIF_DATA_NAME@;
   using Behavior = rclcpp::@NODEIF_TYPE@<DataType>;

@@ -14,15 +14,15 @@
 
 class InterfaceSpecification(object):
 
-    def __init__(self, traits, info):
-        self._traits = traits
+    def __init__(self, socket, info):
+        self._socket = socket
         self._name = info['name']
         self._type = info['type']
         self._data = tuple(info['data'].split('/'))
 
     @property
-    def traits(self):
-        return self._traits
+    def socket(self):
+        return self._socket
 
     @property
     def name(self):

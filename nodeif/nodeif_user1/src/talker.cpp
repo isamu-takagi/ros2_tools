@@ -25,7 +25,7 @@
 namespace nodeif_user1
 {
 
-class Talker : public nodeifs::NodeIF
+class Talker : public nodeif::NodeIF
 {
 public:
   explicit Talker(const rclcpp::NodeOptions & options) : NodeIF("talker", options)
@@ -41,7 +41,7 @@ public:
         pub_->publish(std::move(msg_));
       };
 
-    pub_ = this->create_publisher<nodeif::SendChatter>();
+    pub_ = this->create_publisher<socket::SendChatter>();
     timer_ = this->create_wall_timer(1s, publish_message);
   }
 

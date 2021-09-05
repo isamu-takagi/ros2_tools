@@ -17,7 +17,7 @@
 #include "nodeif/nodeif.hpp"
 
 TEST(nodeif, instantiate) {
-  nodeifs::NodeIF node("nodeif_test");
+  nodeif::NodeIF node("nodeif_test");
 }
 
 int main(int argc, char ** argv)

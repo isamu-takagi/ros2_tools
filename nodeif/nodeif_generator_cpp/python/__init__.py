@@ -33,7 +33,7 @@ def configure():
     spec = InterfaceSpecification(path.stem, info)
 
     script = ConfigureFileScript()
-    script.configure('NODEIF_TRAITS',        spec.traits)
+    script.configure('NODEIF_SOCKET',        spec.socket)
     script.configure('NODEIF_TYPE',          spec.type.capitalize())
     script.configure('NODEIF_NAME',          spec.name)
     script.configure('NODEIF_QOS_CODE',      create_qos_code(spec))
@@ -55,12 +55,12 @@ def create_qos_code(spec):
 
 
 def create_include_guard(package, spec):
-    traits = utils.camel_to_snake(spec.traits)
-    return '__'.join([package, 'nodeif', traits]).upper()
+    socket = utils.camel_to_snake(spec.socket)
+    return '__'.join([package, 'nodeif', socket]).upper()
 
 
 def create_namespace(package):
-    return '{}::nodeif'.format(package)
+    return '{}::socket'.format(package)
 
 
 def create_data_name(spec):
