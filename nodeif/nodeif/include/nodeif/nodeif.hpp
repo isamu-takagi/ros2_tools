@@ -17,7 +17,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 
-namespace nodeif
+namespace nodeifs
 {
 
 class NodeIF : public rclcpp::Node

@@ -17,7 +17,7 @@ message(STATUS "[NODEIF]   TARGET=${nodeif_generator_TARGET}")
 message(STATUS "[NODEIF]   FILES=${nodeif_generator_FILES}")
 
 # init directory
-normalize_path(_build_path "${PROJECT_BINARY_DIR}/nodeif_generator_cpp")
+normalize_path(_build_path "${CMAKE_CURRENT_BINARY_DIR}/nodeif_generator_cpp/${PROJECT_NAME}")
 normalize_path(_share_path "${nodeif_generator_cpp_DIR}/..")
 
 # create output files and path tuples
@@ -29,7 +29,7 @@ foreach(_input_file ${nodeif_generator_FILES})
   string(REGEX REPLACE "[A-Z]" "_\\0" _snake "${_camel}")
   string(TOLOWER "${_snake}" _snake)
   string(REGEX REPLACE "^_" "" _snake "${_snake}")
-  list(APPEND _output_files "${_build_path}/output/${_folder}/${_snake}.hpp")
+  list(APPEND _output_files "${_build_path}/${_folder}/${_snake}.hpp")
   list(APPEND _path_tuples "${_folder}\;${_snake}\;${_camel}")
 endforeach()
 
@@ -43,9 +43,9 @@ foreach(_path_tuple ${_path_tuples})
   list(GET _path_tuple 0 _folder)
   list(GET _path_tuple 1 _snake)
   list(GET _path_tuple 2 _camel)
-  set(_target_source "${PROJECT_SOURCE_DIR}/${_folder}/${_camel}.yaml")
-  set(_target_config "${_build_path}/config/${_folder}/${_snake}.cmake")
-  set(_target_output "${_build_path}/output/${_folder}/${_snake}.hpp")
+  set(_target_source "${CMAKE_CURRENT_SOURCE_DIR}/${_folder}/${_camel}.yaml")
+  set(_target_config "${_build_path}/${_folder}/${_snake}.cmake")
+  set(_target_output "${_build_path}/${_folder}/${_snake}.hpp")
 
   # generate configure_file script
   add_custom_command(
@@ -72,12 +72,31 @@ foreach(_path_tuple ${_path_tuples})
 
 endforeach()
 
+# export target
+set(_target_suffix "___cpp")
+add_library(${nodeif_generator_TARGET}${_target_suffix} INTERFACE)
+target_include_directories(${nodeif_generator_TARGET}${_target_suffix}
+  INTERFACE
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/nodeif_generator_cpp>"
+  "$<INSTALL_INTERFACE:include>"
+)
+add_dependencies(
+  ${nodeif_generator_TARGET}${_target_suffix}
+  ${nodeif_generator_TARGET}__cpp
+)
+
 # install output files if exists
-if(EXISTS ${_build_path}/output)
+if(EXISTS ${_build_path})
   install(
-    DIRECTORY ${_build_path}/output/
+    DIRECTORY ${_build_path}/
     DESTINATION include/${PROJECT_NAME}
     PATTERN *.hpp
   )
   ament_export_include_directories(include)
 endif()
+
+install(
+  TARGETS ${nodeif_generator_TARGET}${_target_suffix}
+  EXPORT ${nodeif_generator_TARGET}${_target_suffix}
+)
+ament_export_targets(${nodeif_generator_TARGET}${_target_suffix})

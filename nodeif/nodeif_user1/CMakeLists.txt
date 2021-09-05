@@ -29,14 +29,14 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 )
 target_link_libraries(${PROJECT_NAME} "${nodeif_target}")
 
-#rclcpp_components_register_node(${PROJECT_NAME}
-#  PLUGIN "Talker"
-#  EXECUTABLE talker
-#)
-#rclcpp_components_register_node(${PROJECT_NAME}
-#  PLUGIN "Listener"
-#  EXECUTABLE listener
-#)
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "nodeif_user1::Talker"
+  EXECUTABLE talker
+)
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "nodeif_user1::Listener"
+  EXECUTABLE listener
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

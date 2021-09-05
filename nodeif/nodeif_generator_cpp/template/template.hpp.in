@@ -14,7 +14,7 @@ struct @NODEIF_TRAITS@
 
   static std::string name()
   {
-    return @NODEIF_NAME@;
+    return "@NODEIF_NAME@";
   }
   static rclcpp::QoS qos()
   {

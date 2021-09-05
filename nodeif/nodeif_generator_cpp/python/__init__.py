@@ -51,7 +51,7 @@ def configure():
 
 
 def create_qos_code(spec):
-    return 'QoS(7)' ## temporary
+    return 'rclcpp::QoS(7)' ## TODO(Takagi, Isamu): temporary
 
 
 def create_include_guard(package, spec):
@@ -68,5 +68,5 @@ def create_data_name(spec):
 
 
 def create_data_header(spec):
-    last = utils.camel_to_snake(spec.data[-1])
+    last = utils.camel_to_snake(spec.data[-1]) + '.hpp'
     return '/'.join(spec.data[:-1] + (last,))

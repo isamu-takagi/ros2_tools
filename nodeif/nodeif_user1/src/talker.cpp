@@ -20,9 +20,12 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "nodeif/nodeif.hpp"
-#include "nodeif_user1/nodeif/listener/send_chatter.hpp"
+#include "nodeif_user1/nodeif/talker/send_chatter.hpp"
 
-class Talker : public nodeif::NodeIF
+namespace nodeif_user1
+{
+
+class Talker : public nodeifs::NodeIF
 {
 public:
   explicit Talker(const rclcpp::NodeOptions & options) : NodeIF("talker", options)
@@ -38,7 +41,7 @@ public:
         pub_->publish(std::move(msg_));
       };
 
-    pub_ = this->create_publisher<SendStringMessage>();
+    pub_ = this->create_publisher<nodeif::SendChatter>();
     timer_ = this->create_wall_timer(1s, publish_message);
   }
 
@@ -49,5 +52,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 };
 
+}
+
 #include "rclcpp_components/register_node_macro.hpp"
-RCLCPP_COMPONENTS_REGISTER_NODE(Talker)
+RCLCPP_COMPONENTS_REGISTER_NODE(nodeif_user1::Talker)

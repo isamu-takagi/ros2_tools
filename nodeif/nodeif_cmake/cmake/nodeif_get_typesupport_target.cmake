@@ -18,7 +18,7 @@ function(nodeif_get_typesupport_target variable target typesupport)
     message(FATAL_ERROR "${target} is not a CMake target. Maybe nodeif_generate was given a different target name?")
   endif()
 
-  set(output_target "${target}__${typesupport}")
+  set(output_target "${target}___${typesupport}")
 
   if(NOT TARGET ${output_target})
     message(FATAL_ERROR "${output_target} is not a CMake target - maybe the typesupport '${typesupport}' doesn't exist?")

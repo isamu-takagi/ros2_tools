@@ -17,7 +17,10 @@
 #include "nodeif/nodeif.hpp"
 #include "nodeif_user1/nodeif/listener/recv_chatter.hpp"
 
-class Listener : public nodeif::NodeIF
+namespace nodeif_user1
+{
+
+class Listener : public nodeifs::NodeIF
 {
 public:
   explicit Listener(const rclcpp::NodeOptions & options) : NodeIF("listener", options)
@@ -28,12 +31,14 @@ public:
         RCLCPP_INFO(this->get_logger(), "I heard: [%s]", msg->data.c_str());
       };
 
-    sub_ = create_subscription<RecvStringMessage>(callback);
+    sub_ = create_subscription<nodeif::RecvChatter>(callback);
   }
 
 private:
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_;
 };
 
+}
+
 #include "rclcpp_components/register_node_macro.hpp"
-RCLCPP_COMPONENTS_REGISTER_NODE(Listener)
+RCLCPP_COMPONENTS_REGISTER_NODE(nodeif_user1::Listener)
