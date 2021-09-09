@@ -13,28 +13,25 @@
 # limitations under the License.
 
 from .connection import Connection
-from .nodeif import NodeIF
+from .process import Node
 
 
-class Graph(object):
+class Group(object):
 
     def __init__(self):
         self._nodes = []
         self._links = []
         # self._binds = [] (node-link)
 
-    def nodeif(self, node, *args, **kwargs):
-        entity = NodeIF(node, *args, **kwargs)
+    def create_process(self, node, *args, **kwargs):
+        entity = Node(node, *args, **kwargs)
         self._nodes.append(entity)
         return entity
 
-    def connection(self, **kwargs):
+    def create_channel(self, **kwargs):
         entity = Connection(**kwargs)
         self._links.append(entity)
         return entity
 
     def description(self):
         return [node.action() for node in self._nodes]
-
-    def dump(self):
-        print("!! graph !!")

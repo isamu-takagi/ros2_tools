@@ -17,7 +17,10 @@ class Connection(object):
     def __init__(self, *, name, type):
         self._name = name
         self._type = type
-        # self._sockets = []
 
-    # def bind(self, socket):
-    #    self._sockets.append(socket)
+    def bind(self, sockets):
+        for socket in sockets:
+            if type(socket) is tuple:
+                process, socket_name = socket
+                socket = process.socket(socket_name)
+            socket._bind(self)

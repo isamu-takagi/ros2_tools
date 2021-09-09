@@ -19,15 +19,11 @@ class Socket(object):
         self._name = name
         self._connection = None
 
-    def bind(self, connection):
+    def _bind(self, connection):
         if self._connection:
             raise Exception("This socket is already bound.")
         self._connection = connection
-        self._graph_bind()
 
-    # called by (self.bind -> graph.bind -> self._graph_bind)
-    # static method (Socket, Connection)?
-    def _graph_bind(self):
         full_name = "{}.{}".format(self._node._kwargs["name"], self._name)
         print("{} = {}".format(full_name, self._connection._name))
         self._node._kwargs.setdefault("remappings", [])

@@ -15,7 +15,7 @@
 from .socket import Socket
 
 
-class NodeIF(object):
+class Node(object):
 
     def __init__(self, node, *args, **kwargs):
         self._node = node
