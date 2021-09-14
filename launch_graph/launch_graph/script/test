@@ -1,3 +1,21 @@
 #!/usr/bin/python3
 
-print('test')
+from launch_graph.graph import Graph
+from launch_graph.ros import Node
+from launch_graph.ros import Topic
+from launch_graph.ros import TopicSocket
+
+
+graph = Graph()
+
+node1 = Node(graph, executable="string_counter")
+node2 = Node(graph, executable="string_printer")
+
+topic = Topic(graph, name="message")
+
+socket1 = TopicSocket(node1, name="aaa")
+socket2 = TopicSocket(node2, name="bbb")
+
+topic.bind(socket1, socket2)
+
+graph.dump()

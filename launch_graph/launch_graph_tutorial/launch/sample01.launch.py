@@ -12,22 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import launch_graph as Launch_graph
 from launch import LaunchDescription
-from launch_ros.actions import Node
+from launch_graph.graph import Graph
+from launch_graph.ros import Node
+from launch_graph.ros import Topic
+from launch_graph.ros import TopicSocket
 
 
 def generate_launch_graph():
 
     # create Launch graph
-    graph = Launch_graph.create_graph()
+    graph = Graph()
 
     # create node process
-    counter = graph.create_process(Node, package="launch_graph_tutorial", executable="string_counter", name="string_counter")
-    printer = graph.create_process(Node, package="launch_graph_tutorial", executable="string_printer", name="string_printer")
+    counter = Node(graph, package="launch_graph_tutorial", executable="string_counter", name="string_counter")
+    printer = Node(graph, package="launch_graph_tutorial", executable="string_printer", name="string_printer")
 
     # create topic channel
-    message = graph.create_channel(name="/message", type="std_msgs/msg/String")
+    message = Topic(graph, name="/message", type="std_msgs/msg/String")
 
     # set up connection
     message.bind([
@@ -41,4 +43,7 @@ def generate_launch_graph():
 def generate_launch_description():
 
     # convert to launch description
-    return LaunchDescription(generate_launch_graph().description())
+    graph = generate_launch_graph()
+    graph.dump()
+    return LaunchDescription(graph.descriptions())
+    # return LaunchDescription(generate_launch_graph().descriptions())
