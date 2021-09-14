@@ -18,33 +18,28 @@ from .graph import Channel
 from .graph import Socket
 from launch_ros.actions import Node as RosNode
 
+
+class TopicSocket(Socket):
+
+    def __init__(self, node: 'Node', name: str, **kwargs):
+        self._kwargs = kwargs
+        super().__init__(node, name)
+
+
 class Node(Process):
 
     def __init__(self, graph: Graph, **kwargs):
         self._kwargs = kwargs
         super().__init__(graph)
 
-    def descriptions(self):
-        print(self._connected_channels())
+    def __str__(self):
+        return super().__str__(self._kwargs['executable'])
+
+    def _descriptions(self):
+        self._kwargs["remappings"] = []
+        for socket, channel in self._connected_channels(TopicSocket):
+            self._kwargs["remappings"].append((socket._name, channel._kwargs['name']))
         return [RosNode(**self._kwargs)]
-
-    @property
-    def _identifier(self):
-        return self._kwargs['executable']
-
-
-class TopicSocket(Socket):
-
-    type_process = Node
-
-    def __init__(self, node: Node, name: str, **kwargs):
-        self._name = name
-        self._kwargs = kwargs
-        super().__init__(node)
-
-    @property
-    def _identifier(self):
-        return self._name
 
 
 class Topic(Channel):
@@ -52,6 +47,9 @@ class Topic(Channel):
     def __init__(self, graph: Graph, **kwargs):
         self._kwargs = kwargs
         super().__init__(graph)
+
+    def __str__(self):
+        return super().__str__(self._kwargs['name'])
 
     def bind(self, sockets):
         super().bind(map(self.__convert_socket, sockets))
@@ -61,7 +59,3 @@ class Topic(Channel):
         if isinstance(socket, TopicSocket):
             return socket
         return socket[0]._socket(TopicSocket, socket[1])
-
-    @property
-    def _identifier(self):
-        return self._kwargs['name']
