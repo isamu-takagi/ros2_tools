@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from typing import Sequence, Type
 from .utils import check_is_subclass
 from .utils import check_is_instance
 
@@ -71,55 +71,7 @@ class GraphElement(object):
         return self.__graph
 
 
-class Process(GraphElement):
-
-    def __init__(self, graph: Graph):
-        super().__init__(Process, graph)
-        self.__sockets = {}
-
-    def __str__(self, info=None):
-        return super().__str__("P", info)
-
-    def __create_socket(self, socket_class: type, name: str):
-        check_is_subclass(socket_class, Socket)
-        socket = socket_class(self._graph, name)
-        socket._register_process(self)
-        self.__sockets[socket_class, name] = socket
-        return socket
-
-    def _socket(self, type_: type, name: str):
-        socket = self.__sockets.get((type_, name))
-        return socket or self.__create_socket(type_, name)
-
-    # TODO: rename
-    def _connected_channels(self, types):
-        for key, socket in self.__sockets.items():
-            yield socket, socket._channel
-
-
-class Channel(GraphElement):
-
-    def __init__(self, graph: Graph):
-        super().__init__(Channel, graph)
-        self.__sockets = []
-
-    def __str__(self, info=None):
-        return super().__str__("C", info)
-
-    def __connect_socket(self, socket):
-        check_is_instance(socket, Socket)
-        socket._register_channel(self)
-        self.__sockets.append(socket)
-
-    def bind(self, sockets):
-        for socket in sockets:
-            self.__connect_socket(socket)
-
-
 class Socket(GraphElement):
-
-    PROCESS_TYPE = Process
-    CHANNEL_TYPE = Channel
 
     def __init__(self, graph: Graph, name: str):
         super().__init__(Socket, graph)
@@ -130,17 +82,25 @@ class Socket(GraphElement):
     def __str__(self):
         return super().__str__("S", self._name)
 
-    def _register_process(self, process: Process):
-        check_is_instance(process, self.PROCESS_TYPE)
+    def _register_process(self, process: GraphElement):
+        check_is_instance(process, self._process_class)
         if self.__process:
             raise Exception("overwrite socket process")
         self.__process = process
 
-    def _register_channel(self, channel: Channel):
-        check_is_instance(channel, self.CHANNEL_TYPE)
+    def _register_channel(self, channel: GraphElement):
+        check_is_instance(channel, self._channel_class)
         if self.__channel:
             raise Exception("overwrite socket channel")
         self.__channel = channel
+
+    @property
+    def _process_class(self):
+        return Process
+
+    @property
+    def _channel_class(self):
+        return Channel
 
     @property
     def _name(self):
@@ -155,3 +115,56 @@ class Socket(GraphElement):
     def _channel(self):
         # TODO: graph search
         return self.__channel
+
+
+class Process(GraphElement):
+
+    def __init__(self, graph: Graph):
+        super().__init__(Process, graph)
+        self.__sockets = {}
+
+    def __str__(self, info=None):
+        return super().__str__("P", info)
+
+    def __create_socket(self, socket_class: Type[Socket], socket_name: str):
+        check_is_subclass(socket_class, Socket)
+        socket = socket_class(self._graph, socket_name)
+        socket._register_process(self)
+        self.__sockets[socket_class, socket_name] = socket
+        return socket
+
+    def _socket(self, socket_class: Type[Socket], socket_name: str):
+        socket = self.__sockets.get((socket_class, socket_name))
+        return socket or self.__create_socket(socket_class, socket_name)
+
+    def _search_sockets(self, socket_class):
+        for socket in self.__sockets.values():
+            if isinstance(socket, socket_class):
+                yield socket
+
+
+class Channel(GraphElement):
+
+    def __init__(self, graph: Graph):
+        super().__init__(Channel, graph)
+        self.__sockets = []
+
+    def __str__(self, info=None):
+        return super().__str__("C", info)
+
+    def _bind(self, socket_class: Type[Socket], sockets: Sequence[Socket]):
+        for socket in sockets:
+            if type(socket) is tuple:
+                process, socket_name = socket
+                if not isinstance(process, Process):
+                    raise TypeError("")  # TODO: error message
+                if not isinstance(socket_name, str):
+                    raise TypeError("")  # TODO: error message
+                socket = process._socket(socket_class, socket_name)
+            check_is_instance(socket, Socket)
+            socket._register_channel(self)
+            self.__sockets.append(socket)
+
+    @property
+    def Socket(self):
+        return Socket(self.__class__)

@@ -12,50 +12,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from launch_ros.actions import Node as RosNode
 from .graph import Graph
 from .graph import Process
 from .graph import Channel
 from .graph import Socket
-from launch_ros.actions import Node as RosNode
+
+
+class LaunchGraph(Graph):
+    pass
 
 
 class TopicSocket(Socket):
+    pass
 
-    def __init__(self, node: 'Node', name: str, **kwargs):
-        self._kwargs = kwargs
-        super().__init__(node, name)
+
+class Topic(Channel):
+
+    def __init__(self, graph: Graph, name, type):
+        super().__init__(graph)
+        self._name = name
+        self._type = type
+
+    def __str__(self):
+        return super().__str__(self._name)
+
+    def bind(self, sockets):
+        super()._bind(TopicSocket, sockets)
 
 
 class Node(Process):
 
     def __init__(self, graph: Graph, **kwargs):
-        self._kwargs = kwargs
         super().__init__(graph)
-
-    def __str__(self):
-        return super().__str__(self._kwargs['executable'])
-
-    def _descriptions(self):
-        self._kwargs["remappings"] = []
-        for socket, channel in self._connected_channels(TopicSocket):
-            self._kwargs["remappings"].append((socket._name, channel._kwargs['name']))
-        return [RosNode(**self._kwargs)]
-
-
-class Topic(Channel):
-
-    def __init__(self, graph: Graph, **kwargs):
         self._kwargs = kwargs
-        super().__init__(graph)
 
     def __str__(self):
         return super().__str__(self._kwargs['name'])
 
-    def bind(self, sockets):
-        super().bind(map(self.__convert_socket, sockets))
-
-    @staticmethod
-    def __convert_socket(socket):
-        if isinstance(socket, TopicSocket):
-            return socket
-        return socket[0]._socket(TopicSocket, socket[1])
+    def _descriptions(self):
+        self._kwargs["remappings"] = []
+        for socket in self._search_sockets(TopicSocket):
+            self._kwargs["remappings"].append((socket._name, socket._channel._name))
+        return [RosNode(**self._kwargs)]
