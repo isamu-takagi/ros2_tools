@@ -25,12 +25,15 @@ class MultiDataMonitorPanel : public rviz_common::Panel
 
 public:
   explicit MultiDataMonitorPanel(QWidget * parent = nullptr);
-  void update();
   void onInitialize() override;
+  void save(rviz_common::Config config) const override;
+  void load(const rviz_common::Config & config) override;
+
+  void update();
 
 private:
-
 protected:
+  QString path_;
   rviz_common::ros_integration::RosNodeAbstractionIface::WeakPtr rviz_ros_node_;
 };
 

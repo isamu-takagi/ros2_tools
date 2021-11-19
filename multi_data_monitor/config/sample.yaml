@@ -1,0 +1,28 @@
+format:
+  version: 1
+
+root:
+  class: matrix
+  cols: 3
+  rows: 2
+  children:
+    - data_name_1
+    - data_name_2
+    - data_name_3
+    - data_name_4
+
+data_name_1:
+  class: float_with_title
+  title: Speed (km/h)
+
+data_name_2:
+  class: float_with_title
+  title: Angle (rad)
+
+data_name_3:
+  class: float_with_title
+  title: Angle (deg)
+
+data_name_4:
+  class: float_with_title
+  title: Accel (m/s^2)

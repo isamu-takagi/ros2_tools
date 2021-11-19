@@ -7,13 +7,13 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+  add_compile_options(-Wall -Wextra -Wpedantic) # -Werror)
 endif()
 
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)
+find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
 set(QT_LIBRARIES Qt5::Widgets)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -22,6 +22,16 @@ add_definitions(-DQT_NO_KEYWORDS)
 ament_auto_add_library(${PROJECT_NAME} SHARED
   src/main_panel.hpp
   src/main_panel.cpp
+  src/builder/interface.hpp
+  src/builder/interface.cpp
+  src/builder/factory.hpp
+  src/builder/factory.cpp
+  src/builder/layout/grid.hpp
+  src/builder/layout/grid.cpp
+  src/builder/widget/simple.hpp
+  src/builder/widget/simple.cpp
+  src/builder/widget/titled.hpp
+  src/builder/widget/titled.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   ${QT_LIBRARIES}
@@ -33,4 +43,4 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_auto_package(INSTALL_TO_SHARE icons plugins)
+ament_auto_package(INSTALL_TO_SHARE config icons plugins)
