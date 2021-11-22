@@ -29,7 +29,8 @@ public:
   void Build(QWidget * parent, Dictionary & dict);
 
 private:
-  QLabel * label;
+  QLabel * value;
+  QLabel * title;
 };
 
 }  // namespace builder

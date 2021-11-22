@@ -38,10 +38,8 @@ void Grid::Build(QWidget * parent, Dictionary & dict)
       const auto widget = child->GetWidget();
       const auto layout = child->GetLayout();
       std::cout << widget << "  " << layout << std::endl;
-      if (widget)
-      {
-        grid->addWidget(widget, y, x);
-      }
+      if (widget) { grid->addWidget(widget, y, x); }
+      if (layout) { grid->addLayout(layout, y, x); }
     }
 
     x += 1;

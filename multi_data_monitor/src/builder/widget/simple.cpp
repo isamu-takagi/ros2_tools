@@ -20,7 +20,7 @@ namespace builder
 
 void Simple::Build(QWidget * parent, Dictionary & dict)
 {
-  widget_ = label = new QLabel("test");
+  widget_ = label = new QLabel("test", parent);
 }
 
 }  // namespace builder

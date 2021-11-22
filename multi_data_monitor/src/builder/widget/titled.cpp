@@ -14,13 +14,31 @@
 
 #include "titled.hpp"
 #include <QLabel>
+#include <QVBoxLayout>
 
 namespace builder
 {
 
 void Titled::Build(QWidget * parent, Dictionary & dict)
 {
-  widget_ = label = new QLabel("test");
+
+  layout_ = new QVBoxLayout(parent);
+  value = new QLabel("value", parent);
+  title = new QLabel("title", parent);
+
+  value->setAlignment(Qt::AlignCenter);
+  title->setAlignment(Qt::AlignCenter);
+  //value->setToolTip();
+
+  value->setStyleSheet("border-width: 1px 1px 1px 1px; border-style: solid;");
+  title->setStyleSheet("border-width: 0px 1px 1px 1px; border-style: solid;");
+  // background-color
+  // border-color
+  // font-size
+
+  layout_->addWidget(value);
+  layout_->addWidget(title);
+  layout_->setSpacing(0);
 }
 
 }  // namespace builder
