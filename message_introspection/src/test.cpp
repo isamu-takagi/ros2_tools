@@ -44,7 +44,7 @@ void callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized)
   std::cout << "==================== Message1 ====================" << std::endl;
   std::cout << *serialized << std::endl;
   std::cout << "==================== Message2 ====================" << std::endl;
-  std::cout << support->DeserializeYAML() << std::endl;
+  std::cout << support->DeserializeYAML(serialized) << std::endl;
   std::cout << "==================================================" << std::endl;
 }
 
@@ -58,12 +58,6 @@ int main(int argc, char **argv)
   auto subs = node->create_generic_subscription("/generic", type, rclcpp::QoS(1), callback);
 
   RCLCPP_INFO(node->get_logger(), "type: %s", type.c_str());
-  access.GetMessageSupport("builtin_interfaces/msg/Time");
-  access.GetMessageSupport("std_msgs/msg/Header");
-  access.GetMessageSupport("std_msgs/msg/String");
-  access.GetMessageSupport("geometry_msgs/msg/Pose");
-  access.GetMessageSupport("geometry_msgs/msg/PoseStamped");
-
   support = access.GetMessageSupport(type);
 
   rclcpp::spin(node);

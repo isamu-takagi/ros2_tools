@@ -32,9 +32,10 @@ class GenericMessageSupport : public std::enable_shared_from_this<GenericMessage
 {
 public:
 	friend GenericMessage;
-	GenericMessageSupport(const std::string & type);  // TODO: move to private
-	YAML::Node DeserializeYAML();
 
+	GenericMessageSupport(const std::string & type);  // TODO: move to private
+
+	YAML::Node DeserializeYAML(const std::shared_ptr<rclcpp::SerializedMessage> serialized);
 	std::shared_ptr<GenericMessage> Deserialize(const std::shared_ptr<rclcpp::SerializedMessage> serialized);
 
 	// noncopyable
@@ -59,14 +60,9 @@ class GenericMessage
 {
 public:
 	friend GenericMessageSupport;
+
 	GenericMessage(const std::shared_ptr<GenericMessageSupport> & support);
 	~GenericMessage();
-
-	template<class T>
-	T Access(const GenericAccessor accessor);
-
-	template<class T>
-	T Access(const std::string & fields) { return Access<T>(GenericAccessor(fields)); }
 
 	// noncopyable
 	GenericMessage(const GenericMessage&) = delete;
