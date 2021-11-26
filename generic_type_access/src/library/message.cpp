@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "message.hpp"
+#include "generic_type_access/message.hpp"
 #include "debug.hpp"
 #include <rclcpp/typesupport_helpers.hpp>
 #include <rclcpp/serialized_message.hpp>

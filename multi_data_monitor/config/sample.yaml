@@ -12,17 +12,21 @@ root:
     - data_name_4
 
 data_name_1:
-  class: float_with_title
+  class: titled
   title: Speed (km/h)
+  topic:
+    name: /test
+    type: std_msgs/msg/Header
+    data: stamp.sec
 
 data_name_2:
-  class: float_with_title
+  class: titled
   title: Angle (rad)
 
 data_name_3:
-  class: float_with_title
+  class: titled
   title: Angle (deg)
 
 data_name_4:
-  class: float_with_title
+  class: titled
   title: Accel (m/s^2)

@@ -53,7 +53,7 @@ void Factory::CreateNode(const std::string & name, const YAML::Node & yaml)
 		dictionary_[name] = std::make_unique<Grid>(yaml);
 		return;
 	}
-	if (type == "float_with_title")
+	if (type == "titled")
 	{
 		dictionary_[name] = std::make_unique<Titled>(yaml);
 		return;

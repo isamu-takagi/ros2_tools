@@ -14,10 +14,10 @@ find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
 ament_auto_add_executable(${PROJECT_NAME}
-  src/access.cpp
-  src/debug.cpp
-  src/message.cpp
-  src/test.cpp
+  src/library/access.cpp
+  src/library/debug.cpp
+  src/library/message.cpp
+  src/samples/test.cpp
 )
 
 if(BUILD_TESTING)

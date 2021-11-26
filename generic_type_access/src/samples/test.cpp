@@ -13,9 +13,7 @@
 // limitations under the License.
 
 #include "test.hpp"
-#include "access.hpp"
-
-#include "debug.hpp"
+#include "generic_type_access/access.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <iostream>

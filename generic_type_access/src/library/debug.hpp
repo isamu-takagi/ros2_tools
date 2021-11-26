@@ -15,7 +15,7 @@
 #ifndef DEBUG_HPP_
 #define DEBUG_HPP_
 
-#include "types.hpp"
+#include "generic_type_access/types.hpp"
 
 namespace generic_type_access
 {
