@@ -12,47 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "generic_type_access/message.hpp"
-#include "debug.hpp"
+#include "generic_type_support/message.hpp"
+
 #include <rclcpp/typesupport_helpers.hpp>
 #include <rclcpp/serialized_message.hpp>
 #include <rosidl_typesupport_introspection_cpp/field_types.hpp>
 #include <iostream>
 
-namespace generic_type_access
+namespace generic_type_support
 {
 
 GenericMessageSupport::GenericMessageSupport(const std::string & type)
 {
-	constexpr auto type_identifier = "rosidl_typesupport_cpp";
-	constexpr auto meta_identifier = "rosidl_typesupport_introspection_cpp";
+  introspection_ = IntrospectionMessage::Load(type);
+  serialization_ = MessageSerialization::Load(type);
 
-  type_library_ = rclcpp::get_typesupport_library(type, type_identifier);
-  meta_library_ = rclcpp::get_typesupport_library(type, meta_identifier);
-
-  const auto type_handle_ = rclcpp::get_typesupport_handle(type, type_identifier, *type_library_);
-  const auto meta_handle_ = rclcpp::get_typesupport_handle(type, meta_identifier, *meta_library_);
-
-  serialization_ = std::make_unique<rclcpp::SerializationBase>(type_handle_);
-  meta_message_ = reinterpret_cast<const MetaMessage *>(meta_handle_->data);
-  dump(*meta_message_);
-  for (uint32_t i = 0; i < meta_message_->member_count_; ++i)
+  /*
+  introspection_->Dump();
+  for (const auto field : *introspection_)
   {
     std::cout << std::endl;
-    dump(meta_message_->members_[i]);
+    field.Dump();
   }
+  */
 }
 
-std::shared_ptr<GenericMessage> GenericMessageSupport::Deserialize(const std::shared_ptr<rclcpp::SerializedMessage> serialized)
-{
-  auto message = std::make_shared<GenericMessage>(shared_from_this());
-  serialization_->deserialize_message(serialized.get(), message->message_);
-  return message;
-}
+YAML::Node parse_message(const void * data, const TypeSupportMessage & message);
 
-YAML::Node parse_message(const void * data, const MetaMessage & message);
-
-YAML::Node parse_primitive(const void * data, const MetaField & field)
+YAML::Node parse_primitive(const void * data, const TypeSupportField & field)
 {
   using namespace rosidl_typesupport_introspection_cpp;
 
@@ -93,12 +80,12 @@ YAML::Node parse_primitive(const void * data, const MetaField & field)
     case ROS_TYPE_WSTRING:
       return YAML::Node("[WSTRING IS NOT IMPLEMENTED]");
     case ROS_TYPE_MESSAGE:
-      return parse_message(data, *reinterpret_cast<const MetaMessage*>(field.members_->data));
+      return parse_message(data, *reinterpret_cast<const TypeSupportMessage*>(field.members_->data));
   }
   return YAML::Node("[PARSE_ERROR]");
 }
 
-YAML::Node parse_array(const void * data, const MetaField & field)
+YAML::Node parse_array(const void * data, const TypeSupportField & field)
 {
   YAML::Node node;
   size_t size = field.size_function(data);
@@ -110,7 +97,7 @@ YAML::Node parse_array(const void * data, const MetaField & field)
   return node;
 }
 
-YAML::Node parse_field(const void * data, const MetaField & field)
+YAML::Node parse_field(const void * data, const TypeSupportField & field)
 {
   if (field.is_array_)
   {
@@ -119,36 +106,33 @@ YAML::Node parse_field(const void * data, const MetaField & field)
   return parse_primitive(data, field);
 }
 
-YAML::Node parse_message(const void * data, const MetaMessage & message)
+YAML::Node parse_message(const void * data, const TypeSupportMessage & message)
 {
   YAML::Node node;
   for (uint32_t i = 0; i < message.member_count_; ++i)
   {
-    const MetaField & field = message.members_[i];
+    const TypeSupportField & field = message.members_[i];
     node[field.name_] = parse_field(static_cast<const uint8_t*>(data) + field.offset_, field);
   }
   return node;
 }
 
-YAML::Node GenericMessageSupport::DeserializeYAML(const std::shared_ptr<rclcpp::SerializedMessage> serialized)
+YAML::Node GenericMessageSupport::DeserializeYAML(const rclcpp::SerializedMessage & serialized)
 {
-  const auto message = Deserialize(serialized);
-  return parse_message(message->message_, *meta_message_);
+  std::cout << "allocate size: " << introspection_->message_.size_of_ << std::endl;
+
+  void * data = static_cast<uint8_t*>(std::malloc(introspection_->message_.size_of_));
+  introspection_->message_.init_function(data, rosidl_runtime_cpp::MessageInitialization::SKIP);
+  serialization_->deserialize_message(&serialized, data);
+
+  YAML::Node yaml = parse_message(data, introspection_->message_);
+
+  introspection_->message_.fini_function(data);
+  std::free(data);
+
+  std::cout << "delete message" << std::endl;
+
+  return yaml;
 }
 
-GenericMessage::GenericMessage(const std::shared_ptr<GenericMessageSupport> & support)
-{
-  std::cout << "init deserialize message" << std::endl;
-  support_ = support;
-  message_ = static_cast<uint8_t*>(std::malloc(support_->meta_message_->size_of_));
-  support_->meta_message_->init_function(message_, rosidl_runtime_cpp::MessageInitialization::SKIP);
-}
-
-GenericMessage::~GenericMessage()
-{
-  std::cout << "fini deserialize message" << std::endl;
-  support_->meta_message_->fini_function(message_);
-  std::free(message_);
-}
-
-}  // namespace generic_type_access
+}  // namespace generic_type_support

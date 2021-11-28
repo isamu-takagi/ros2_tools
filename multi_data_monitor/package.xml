@@ -13,9 +13,10 @@
   <depend>libqt5-gui</depend>
   <depend>libqt5-widgets</depend>
   <depend>qtbase5-dev</depend>
+  <depend>yaml-cpp</depend>
   <depend>rclcpp</depend>
   <depend>rviz_common</depend>
-  <depend>yaml-cpp</depend>
+  <depend>generic_type_support</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

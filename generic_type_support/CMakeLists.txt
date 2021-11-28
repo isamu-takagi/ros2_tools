@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(generic_type_access)
+project(generic_type_support)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -14,8 +14,8 @@ find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
 ament_auto_add_executable(${PROJECT_NAME}
-  src/library/access.cpp
-  src/library/debug.cpp
+  src/library/typesupport.cpp
+  #src/library/debug.cpp
   src/library/message.cpp
   src/samples/test.cpp
 )

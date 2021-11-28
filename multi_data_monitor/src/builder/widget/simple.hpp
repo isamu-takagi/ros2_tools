@@ -26,7 +26,7 @@ class Simple : public Interface
 {
 public:
   using Interface::Interface;
-  void Build(QWidget * parent, Dictionary & dict);
+  void Build(Dictionary & dict);
 
 private:
   QLabel * label;

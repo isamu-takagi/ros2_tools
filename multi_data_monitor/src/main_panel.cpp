@@ -34,31 +34,34 @@ void MultiDataMonitorPanel::save(rviz_common::Config config) const
 
 void MultiDataMonitorPanel::onInitialize()
 {
-  std::cout << "init: " << path_.toStdString() << std::endl;
   rviz_ros_node_ = getDisplayContext()->getRosNodeAbstraction();
 }
 
 void MultiDataMonitorPanel::load(const rviz_common::Config & config)
 {
-  std::cout << "config: load" << std::endl;
   Panel::load(config);
   config.mapGetString("File", &path_);
 
-  std::cout << "load: " << path_.toStdString() << std::endl;
-
   try
   {
+    std::cout << std::string(100, '=') << std::endl;
+    std::cout << "File: " << path_.toStdString() << std::endl;
     YAML::Node yaml = YAML::LoadFile(path_.toStdString());
-    std::cout << "format version: " << yaml["format"]["version"].as<int>() << std::endl;
-    std::cout << "type: " << yaml.Type() << std::endl;
+    YAML::Node format = yaml["format"];
     yaml.remove("format");
+    std::cout << "format version: " << format["version"].as<int>() << std::endl;
 
+    std::cout << std::string(100, '=') << std::endl;
     builder::Factory factory;
     for(const auto & node : yaml)
     {
       factory.CreateNode(node.first.as<std::string>(), node.second);
     }
+    std::cout << std::string(100, '=') << std::endl;
+    factory.Subscribe();
+    std::cout << std::string(100, '=') << std::endl;
     factory.Build(this);
+    std::cout << std::string(100, '=') << std::endl;
   }
   catch(YAML::BadFile & error)
   {

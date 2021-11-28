@@ -18,9 +18,9 @@
 namespace builder
 {
 
-void Simple::Build(QWidget * parent, Dictionary & dict)
+void Simple::Build([[maybe_unused]] Dictionary & dict)
 {
-  widget_ = label = new QLabel("test", parent);
+  widget_ = label = new QLabel("test");
 }
 
 }  // namespace builder

@@ -18,9 +18,16 @@
 namespace builder
 {
 
-Interface::Interface(const YAML::Node & yaml)
+Interface::Interface(const std::string & name, const YAML::Node & yaml)
 {
+  name_ = name;
   yaml_ = yaml;
+}
+
+std::string Interface::GetTopic()
+{
+  if (!yaml_["topic"]["name"]) { return ""; }
+  return yaml_["topic"]["name"].as<std::string>();
 }
 
 /*

@@ -20,9 +20,9 @@
 namespace builder
 {
 
-void Grid::Build(QWidget * parent, Dictionary & dict)
+void Grid::Build(Dictionary & dict)
 {
-  layout_ = grid = new QGridLayout(parent);
+  layout_ = grid = new QGridLayout();
 
   int cols = yaml_["cols"].as<int>();
   int rows = yaml_["rows"].as<int>();
@@ -34,10 +34,9 @@ void Grid::Build(QWidget * parent, Dictionary & dict)
     const auto & child = dict[node.as<std::string>()];
     if (child)
     {
-      child->Build(parent, dict);
+      child->Build(dict);
       const auto widget = child->GetWidget();
       const auto layout = child->GetLayout();
-      std::cout << widget << "  " << layout << std::endl;
       if (widget) { grid->addWidget(widget, y, x); }
       if (layout) { grid->addLayout(layout, y, x); }
     }

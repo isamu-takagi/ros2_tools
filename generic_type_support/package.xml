@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package format="2">
 
-  <name>generic_type_access</name>
+  <name>generic_type_support</name>
   <version>0.0.0</version>
-  <description>The generic_type_access package</description>
+  <description>The generic_type_support package</description>
   <maintainer email="isamu.takagi@tier4.jp">Takagi, Isamu</maintainer>
   <license>Apache License 2.0</license>
 

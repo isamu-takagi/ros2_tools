@@ -23,42 +23,63 @@
 namespace builder
 {
 
-void Factory::Build(QWidget * panel)
-{
-  std::cout << "===============" << std::endl;
-  for (const auto & pair : dictionary_)
-  {
-	std::cout << pair.first << "  " << pair.second.get() << std::endl;
-  }
-  const auto & root = dictionary_.at("root");
-  root->Build(panel, dictionary_);
-
-  const auto widget = root->GetWidget();
-  const auto layout = root->GetLayout();
-  std::cout << widget << "  " << layout << std::endl;
-  if (layout)
-  {
-	  panel->setLayout(layout);
-  }
-}
-
 void Factory::CreateNode(const std::string & name, const YAML::Node & yaml)
 {
 	const auto type = yaml["class"].as<std::string>();
-	std::cout << "  " << name << "  " << type << std::endl;
+	std::cout << "create node: " << name << "  " << type << std::endl;
 
 	std::unique_ptr<Interface> builder = nullptr;
 	if (type == "matrix")
 	{
-		dictionary_[name] = std::make_unique<Grid>(yaml);
+		dictionary_[name] = std::make_unique<Grid>(name, yaml);
 		return;
 	}
 	if (type == "titled")
 	{
-		dictionary_[name] = std::make_unique<Titled>(yaml);
+		dictionary_[name] = std::make_unique<Titled>(name, yaml);
 		return;
 	}
 	std::cout << "  unknown type: " << type << std::endl;
+}
+
+void Factory::Subscribe()
+{
+	for (const auto & pair : dictionary_)
+	{
+		const std::string topic = pair.second->GetTopic();
+		if (!topic.empty())
+		{
+			if (subscriptions_.count(topic))
+			{
+				std::cout << "subscribe: " << topic << std::endl;
+			}
+
+			// TopicSubscription
+			// message access
+			// callbacks
+		}
+	}
+}
+
+void Factory::Build(QWidget * panel)
+{
+  const auto & root = dictionary_.at("root");
+  root->Build(dictionary_);
+
+  const auto widget = root->GetWidget();
+  std::cout << "widget: " << widget << std::endl;
+  if (widget)
+  {
+	// TODO: use dummy layout
+	//panel->Widget(widget)
+  }
+
+  const auto layout = root->GetLayout();
+  std::cout << "layout: " << layout << std::endl;
+  if (layout)
+  {
+	panel->setLayout(layout);
+  }
 }
 
 }  // namespace builder

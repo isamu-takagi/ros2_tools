@@ -16,19 +16,34 @@
 #define BUILDER__FACTORY_HPP_
 
 #include "interface.hpp"
+#include "generic_type_support/message.hpp"
+#include <rclcpp/rclcpp.hpp>
 #include <yaml-cpp/yaml.h>
+#include <map>
+#include <vector>
 
 namespace builder
 {
 
+/*
+struct TopicSubscription
+{
+  generic_type_support::GenericMessageSupport support;
+  rclcpp::GenericSubscription::SharedPtr subscription;
+  std::vector<std::shared_ptr<Interface> callbacks;
+};
+*/
+
 class Factory
 {
 public:
-  void Build(QWidget * panel);
   void CreateNode(const std::string & name, const YAML::Node & yaml);
+  void Subscribe();
+  void Build(QWidget * panel);
 
 private:
   Dictionary dictionary_;
+  std::map<std::string, rclcpp::GenericSubscription::SharedPtr> subscriptions_;
 };
 
 }  // namespace builder

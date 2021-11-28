@@ -12,19 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef DEBUG_HPP_
-#define DEBUG_HPP_
+#ifndef UTILS_HPP_
+#define UTILS_HPP_
 
-#include "generic_type_access/types.hpp"
+}  // namespace generic_type_support
 
-namespace generic_type_access
-{
-
-void debug(const rosidl_message_type_support_t * handle, int indent = 0);
-
-void dump(const MetaMessage & message, int indent = 0);
-void dump(const MetaField & field, int indent = 0);
-
-}  // namespace generic_type_access
-
-#endif  // FIELD_HPP_
+#endif  // UTILS_HPP_

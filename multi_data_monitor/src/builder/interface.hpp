@@ -32,16 +32,20 @@ using Dictionary = std::map<std::string, std::unique_ptr<Interface>>;
 class Interface
 {
 public:
-  Interface(const YAML::Node & yaml);
+  Interface(const std::string & name, const YAML::Node & yaml);
   virtual ~Interface() = default;
 
+  // TODO: merge (Build, GetWidget, GetLayout)
   QWidget * GetWidget() {return widget_;}
   QLayout * GetLayout() {return layout_;}
-  virtual void Build(QWidget * parent, Dictionary & dict) = 0;
+  virtual void Build(Dictionary & dict) = 0;
   // static void AddChild(QWidget * parent, const std::unique_ptr<Interface> & base);
   // static void AddChild(QLayout * parent, const std::unique_ptr<Interface> & base);
 
+  std::string GetTopic();
+
 protected:
+  std::string name_;
   YAML::Node yaml_;
   QWidget * widget_ = nullptr;
   QLayout * layout_ = nullptr;

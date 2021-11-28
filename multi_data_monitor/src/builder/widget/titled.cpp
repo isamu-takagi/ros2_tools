@@ -19,12 +19,11 @@
 namespace builder
 {
 
-void Titled::Build(QWidget * parent, Dictionary & dict)
+void Titled::Build([[maybe_unused]] Dictionary & dict)
 {
-
-  layout_ = new QVBoxLayout(parent);
-  value = new QLabel("value", parent);
-  title = new QLabel("title", parent);
+  layout_ = new QVBoxLayout();
+  value = new QLabel("value");
+  title = new QLabel("title");
 
   value->setAlignment(Qt::AlignCenter);
   title->setAlignment(Qt::AlignCenter);

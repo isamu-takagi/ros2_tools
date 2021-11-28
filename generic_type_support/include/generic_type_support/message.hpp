@@ -12,9 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef UTILS_HPP_
-#define UTILS_HPP_
+#ifndef MESSAGE_HPP_
+#define MESSAGE_HPP_
 
-}  // namespace generic_type_access
+#include "typesupport.hpp"
 
-#endif  // UTILS_HPP_
+#include <yaml-cpp/yaml.h>
+#include <memory>
+
+namespace generic_type_support
+{
+
+class GenericMessageSupport
+{
+public:
+	GenericMessageSupport(const std::string & type);
+	YAML::Node DeserializeYAML(const rclcpp::SerializedMessage & serialized);
+
+private:
+	std::shared_ptr<IntrospectionMessage> introspection_;
+	std::shared_ptr<MessageSerialization> serialization_;
+};
+
+}  // namespace generic_type_support
+
+#endif  // MESSAGE_HPP_

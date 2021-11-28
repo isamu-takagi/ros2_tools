@@ -13,19 +13,27 @@ root:
 
 data_name_1:
   class: titled
-  title: Speed (km/h)
+  title: Second
   topic:
-    name: /test
+    name: /monitor/header
     type: std_msgs/msg/Header
     data: stamp.sec
 
 data_name_2:
   class: titled
-  title: Angle (rad)
+  title: Nanosecond
+  topic:
+    name: /monitor/header
+    type: std_msgs/msg/Header
+    data: stamp.nanosec
 
 data_name_3:
   class: titled
-  title: Angle (deg)
+  title: Frame
+  topic:
+    name: /monitor/header
+    type: std_msgs/msg/Header
+    data: frame_id
 
 data_name_4:
   class: titled

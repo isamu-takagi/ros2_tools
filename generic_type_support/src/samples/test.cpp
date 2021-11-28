@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "test.hpp"
-#include "generic_type_access/access.hpp"
+#include "generic_type_support/message.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <iostream>
@@ -36,27 +36,27 @@ std::ostream& operator<<(std::ostream& os, const rclcpp::SerializedMessage & msg
   return os;
 }
 
-std::shared_ptr<generic_type_access::GenericMessageSupport> support;
+std::shared_ptr<generic_type_support::GenericMessageSupport> support;
 void callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized)
 {
   std::cout << "==================== Message1 ====================" << std::endl;
   std::cout << *serialized << std::endl;
   std::cout << "==================== Message2 ====================" << std::endl;
-  std::cout << support->DeserializeYAML(serialized) << std::endl;
+  std::cout << support->DeserializeYAML(*serialized) << std::endl;
   std::cout << "==================================================" << std::endl;
+
+  rclcpp::shutdown();
 }
 
 int main(int argc, char **argv)
 {
-  auto access = generic_type_access::GenericTypeAccess();
-
   rclcpp::init(argc, argv);
   auto node = std::make_shared<rclcpp::Node>("generic");
   auto type = node->declare_parameter("type", "std_msgs/msg/Header");
   auto subs = node->create_generic_subscription("/generic", type, rclcpp::QoS(1), callback);
 
   RCLCPP_INFO(node->get_logger(), "type: %s", type.c_str());
-  support = access.GetMessageSupport(type);
+  support = std::make_shared<generic_type_support::GenericMessageSupport>(type);
 
   rclcpp::spin(node);
   rclcpp::shutdown();
