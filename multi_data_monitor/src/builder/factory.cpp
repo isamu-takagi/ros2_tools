@@ -42,23 +42,28 @@ void Factory::CreateNode(const std::string & name, const YAML::Node & yaml)
 	std::cout << "  unknown type: " << type << std::endl;
 }
 
-void Factory::Subscribe()
+void Factory::Subscribe(const rclcpp::Node::SharedPtr node)
 {
+	std::map<std::string, std::vector<Interface *>> groups;
 	for (const auto & pair : dictionary_)
 	{
-		const std::string topic = pair.second->GetTopic();
+		const std::string topic = pair.second->GetTopicName();
 		if (!topic.empty())
 		{
-			if (subscriptions_.count(topic))
-			{
-				std::cout << "subscribe: " << topic << std::endl;
-			}
-
-			// TopicSubscription
-			// message access
-			// callbacks
+			groups[topic].push_back(pair.second.get());  // check release order
 		}
 	}
+
+  for (const auto & [topic, views] : groups)
+  {
+    std::cout << topic << std::endl;
+    for (const auto & view : views)
+    {
+      std::cout << "  " << view->GetName() << std::endl;
+    }
+    subscriptions_[topic] = std::make_unique<TopicSubscription>(node, views);
+  }
+
 }
 
 void Factory::Build(QWidget * panel)

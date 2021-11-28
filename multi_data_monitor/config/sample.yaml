@@ -38,3 +38,7 @@ data_name_3:
 data_name_4:
   class: titled
   title: Accel (m/s^2)
+  topic:
+    name: /monitor/data
+    type: std_msgs/msg/Float32
+    data: data

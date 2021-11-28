@@ -19,6 +19,9 @@
 #include <rviz_common/panel.hpp>
 #include <rviz_common/ros_integration/ros_node_abstraction_iface.hpp>
 
+#include "builder/factory.hpp"  // TODO: replace forward declaration
+
+
 class MultiDataMonitorPanel : public rviz_common::Panel
 {
   Q_OBJECT
@@ -34,7 +37,7 @@ public:
 private:
 protected:
   QString path_;
-  rviz_common::ros_integration::RosNodeAbstractionIface::WeakPtr rviz_ros_node_;
+  builder::Factory factory_;
 };
 
 #endif  // MAIN_PANEL_HPP_

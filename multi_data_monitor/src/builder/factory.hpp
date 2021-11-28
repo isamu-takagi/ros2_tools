@@ -16,34 +16,61 @@
 #define BUILDER__FACTORY_HPP_
 
 #include "interface.hpp"
-#include "generic_type_support/message.hpp"
 #include <rclcpp/rclcpp.hpp>
 #include <yaml-cpp/yaml.h>
 #include <map>
 #include <vector>
 
+#include "generic_type_support/generic_type_support.hpp"
+
 namespace builder
 {
 
-/*
 struct TopicSubscription
 {
-  generic_type_support::GenericMessageSupport support;
+  TopicSubscription(const rclcpp::Node::SharedPtr node, std::vector<Interface *> interfaces)
+  {
+    using namespace std::placeholders;
+    subscription = node->create_generic_subscription(
+      interfaces[0]->GetTopicName(),
+      interfaces[0]->GetTopicType(),
+      rclcpp::QoS(1),
+      std::bind(&TopicSubscription::Callback, this, _1));
+    std::cout << "create_generic_subscription: " << interfaces[0]->GetTopicName() << " " << interfaces[0]->GetTopicType() << std::endl;
+
+    views = interfaces;
+    support = std::make_unique<generic_type_support::GenericMessageSupport>(interfaces[0]->GetTopicType());
+  }
+
+  ~TopicSubscription()
+  {
+    std::cout << "Destruct TopicSubscription" << std::endl;
+  }
+
+  void Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const
+  {
+    std::cout << "callback" << std::endl;
+    for (const Interface * view : views)
+    {
+      view->Callback(YAML::Node());
+    }
+  }
+
+  std::unique_ptr<generic_type_support::GenericMessageSupport> support;
+  std::vector<Interface *> views;
   rclcpp::GenericSubscription::SharedPtr subscription;
-  std::vector<std::shared_ptr<Interface> callbacks;
 };
-*/
 
 class Factory
 {
 public:
   void CreateNode(const std::string & name, const YAML::Node & yaml);
-  void Subscribe();
+  void Subscribe(const rclcpp::Node::SharedPtr node);
   void Build(QWidget * panel);
 
 private:
   Dictionary dictionary_;
-  std::map<std::string, rclcpp::GenericSubscription::SharedPtr> subscriptions_;
+  std::map<std::string, std::unique_ptr<TopicSubscription>> subscriptions_;
 };
 
 }  // namespace builder

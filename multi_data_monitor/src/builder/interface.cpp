@@ -24,10 +24,21 @@ Interface::Interface(const std::string & name, const YAML::Node & yaml)
   yaml_ = yaml;
 }
 
-std::string Interface::GetTopic()
+std::string Interface::GetName()
+{
+  return name_;
+}
+
+std::string Interface::GetTopicName()
 {
   if (!yaml_["topic"]["name"]) { return ""; }
   return yaml_["topic"]["name"].as<std::string>();
+}
+
+std::string Interface::GetTopicType()
+{
+  if (!yaml_["topic"]["type"]) { return ""; }
+  return yaml_["topic"]["type"].as<std::string>();
 }
 
 /*

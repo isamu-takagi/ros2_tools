@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "main_panel.hpp"
-#include "builder/factory.hpp"
 #include <QLabel>
 #include <QGridLayout>
 #include <yaml-cpp/yaml.h>
@@ -34,13 +33,14 @@ void MultiDataMonitorPanel::save(rviz_common::Config config) const
 
 void MultiDataMonitorPanel::onInitialize()
 {
-  rviz_ros_node_ = getDisplayContext()->getRosNodeAbstraction();
 }
 
 void MultiDataMonitorPanel::load(const rviz_common::Config & config)
 {
   Panel::load(config);
   config.mapGetString("File", &path_);
+
+  const auto rviz_ros_node = getDisplayContext()->getRosNodeAbstraction();
 
   try
   {
@@ -52,15 +52,14 @@ void MultiDataMonitorPanel::load(const rviz_common::Config & config)
     std::cout << "format version: " << format["version"].as<int>() << std::endl;
 
     std::cout << std::string(100, '=') << std::endl;
-    builder::Factory factory;
     for(const auto & node : yaml)
     {
-      factory.CreateNode(node.first.as<std::string>(), node.second);
+      factory_.CreateNode(node.first.as<std::string>(), node.second);
     }
     std::cout << std::string(100, '=') << std::endl;
-    factory.Subscribe();
+    factory_.Subscribe(rviz_ros_node.lock()->get_raw_node());
     std::cout << std::string(100, '=') << std::endl;
-    factory.Build(this);
+    factory_.Build(this);
     std::cout << std::string(100, '=') << std::endl;
   }
   catch(YAML::BadFile & error)

@@ -20,6 +20,8 @@
 #include <map>
 #include <memory>
 
+#include <iostream>  // DEBUG
+
 class QWidget;
 class QLayout;
 
@@ -39,10 +41,17 @@ public:
   QWidget * GetWidget() {return widget_;}
   QLayout * GetLayout() {return layout_;}
   virtual void Build(Dictionary & dict) = 0;
+  virtual void Callback(const YAML::Node & message) const  // TODO: = 0;
+  {
+    std::cout << name_ << std::endl;
+    std::cout << message << std::endl;
+  }
   // static void AddChild(QWidget * parent, const std::unique_ptr<Interface> & base);
   // static void AddChild(QLayout * parent, const std::unique_ptr<Interface> & base);
 
-  std::string GetTopic();
+  std::string GetName();
+  std::string GetTopicName();
+  std::string GetTopicType();
 
 protected:
   std::string name_;
