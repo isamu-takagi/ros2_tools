@@ -33,7 +33,7 @@ data_name_3:
   topic:
     name: /monitor/header
     type: std_msgs/msg/Header
-    data: frame_id.aaa.bbb.ccc
+    data: frame_id
 
 data_name_4:
   class: titled

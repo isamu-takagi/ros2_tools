@@ -41,18 +41,24 @@ std::vector<std::string> split(const std::string & input)
 GeneticTypeAccess::GeneticTypeAccess(const std::string access)
 {
   std::cout << access << std::endl;
-  for (const auto & field : split(access))
+  for (const auto & name : split(access))
   {
-    std::cout << "  " << field << std::endl;
+    GenericTypeAccessField field;
+    field.name = name;
+    fields.push_back(field);
   }
-
+  debug = access;
 }
 
-const YAML::Node GeneticTypeAccess::Get(const YAML::Node & yaml)
+const YAML::Node GeneticTypeAccess::Get(const YAML::Node & yaml) const
 {
-
+  YAML::Node node = yaml;
+  for (const auto & field : fields)
+  {
+    node.reset(node[field.name]);
+  }
+  return node;
 }
-
 
 GenericMessageSupport::GenericMessageSupport(const std::string & type)
 {

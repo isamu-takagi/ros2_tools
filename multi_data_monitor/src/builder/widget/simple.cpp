@@ -23,4 +23,10 @@ void Simple::Build([[maybe_unused]] Dictionary & dict)
   widget_ = label = new QLabel("test");
 }
 
+void Simple::Callback(const YAML::Node & message) const
+{
+  const auto text = access.Get(message).as<std::string>();
+  label->setText(QString::fromStdString(text));
+}
+
 }  // namespace builder

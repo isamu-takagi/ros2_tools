@@ -26,7 +26,7 @@ class Grid : public Interface
 {
 public:
   using Interface::Interface;
-  void Build(Dictionary & dict);
+  void Build(Dictionary & dict) override;
 
 private:
   QGridLayout * grid;

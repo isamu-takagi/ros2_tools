@@ -22,6 +22,11 @@ Interface::Interface(const std::string & name, const YAML::Node & yaml)
 {
   name_ = name;
   yaml_ = yaml;
+
+  if (yaml_["topic"]["data"])
+  {
+    access = generic_type_support::GeneticTypeAccess(yaml_["topic"]["data"].as<std::string>());
+  }
 }
 
 std::string Interface::GetName()

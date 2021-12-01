@@ -26,7 +26,8 @@ class Simple : public Interface
 {
 public:
   using Interface::Interface;
-  void Build(Dictionary & dict);
+  void Build(Dictionary & dict) override;
+  void Callback(const YAML::Node & message) const override;
 
 private:
   QLabel * label;

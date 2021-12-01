@@ -40,4 +40,10 @@ void Titled::Build([[maybe_unused]] Dictionary & dict)
   layout_->setSpacing(0);
 }
 
+void Titled::Callback(const YAML::Node & message) const
+{
+  const auto text = access.Get(message).as<std::string>();
+  value->setText(QString::fromStdString(text));
+}
+
 }  // namespace builder

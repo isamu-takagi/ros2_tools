@@ -42,16 +42,8 @@ public:
   QWidget * GetWidget() {return widget_;}
   QLayout * GetLayout() {return layout_;}
   virtual void Build(Dictionary & dict) = 0;
-  virtual void Callback(const YAML::Node & message) const  // TODO: = 0;
-  {
-    std::cout << name_ << std::endl;
-    std::cout << message << std::endl;
-    if (yaml_["topic"]["data"])
-    {
-      generic_type_support::GeneticTypeAccess(yaml_["topic"]["data"].as<std::string>());
-    }
+  virtual void Callback([[maybe_unused]] const YAML::Node & message) const {};
 
-  }
   // static void AddChild(QWidget * parent, const std::unique_ptr<Interface> & base);
   // static void AddChild(QLayout * parent, const std::unique_ptr<Interface> & base);
 
@@ -64,6 +56,7 @@ protected:
   YAML::Node yaml_;
   QWidget * widget_ = nullptr;
   QLayout * layout_ = nullptr;
+  generic_type_support::GeneticTypeAccess access;
 };
 
 }  // namespace builder

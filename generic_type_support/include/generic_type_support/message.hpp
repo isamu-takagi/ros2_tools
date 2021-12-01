@@ -19,19 +19,31 @@
 
 #include <yaml-cpp/yaml.h>
 #include <memory>
+#include <vector>
 
 namespace generic_type_support
 {
 
+struct GenericTypeAccessField
+{
+	enum class Type {DATA, LIST, DICT};
+	Type type;
+	std::string name;
+	std::string key;
+	int index;
+};
+
 struct GeneticTypeAccess
 {
 public:
+	GeneticTypeAccess() = default;
 	GeneticTypeAccess(const std::string access);
-	const YAML::Node Get(const YAML::Node & yaml);
+	const YAML::Node Get(const YAML::Node & yaml) const;
 
+public:
+	std::string debug;
 private:
-	enum class Type {DATA, LIST, DICT};
-	std::vector<std::pair<Type, std::string>> fields;
+	std::vector<GenericTypeAccessField> fields;
 };
 
 class GenericMessageSupport
