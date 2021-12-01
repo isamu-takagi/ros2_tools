@@ -50,9 +50,10 @@ struct TopicSubscription
   void Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const
   {
     std::cout << "callback" << std::endl;
+    const YAML::Node yaml = support->DeserializeYAML(*serialized);
     for (const Interface * view : views)
     {
-      view->Callback(YAML::Node());
+      view->Callback(yaml);
     }
   }
 

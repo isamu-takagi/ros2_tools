@@ -17,10 +17,42 @@
 #include <rclcpp/typesupport_helpers.hpp>
 #include <rclcpp/serialized_message.hpp>
 #include <rosidl_typesupport_introspection_cpp/field_types.hpp>
-#include <iostream>
+
+#include <iostream> // DEBUG
 
 namespace generic_type_support
 {
+
+std::vector<std::string> split(const std::string & input)
+{
+  std::vector<std::string> result;
+  size_t found = input.find('.');
+  size_t start = 0;
+  while(found != std::string::npos)
+  {
+    result.push_back(input.substr(start, found - start));
+    start = found + 1;
+    found = input.find('.', start);
+  }
+  result.push_back(input.substr(start));
+  return result;
+}
+
+GeneticTypeAccess::GeneticTypeAccess(const std::string access)
+{
+  std::cout << access << std::endl;
+  for (const auto & field : split(access))
+  {
+    std::cout << "  " << field << std::endl;
+  }
+
+}
+
+const YAML::Node GeneticTypeAccess::Get(const YAML::Node & yaml)
+{
+
+}
+
 
 GenericMessageSupport::GenericMessageSupport(const std::string & type)
 {

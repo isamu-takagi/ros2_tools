@@ -23,6 +23,17 @@
 namespace generic_type_support
 {
 
+struct GeneticTypeAccess
+{
+public:
+	GeneticTypeAccess(const std::string access);
+	const YAML::Node Get(const YAML::Node & yaml);
+
+private:
+	enum class Type {DATA, LIST, DICT};
+	std::vector<std::pair<Type, std::string>> fields;
+};
+
 class GenericMessageSupport
 {
 public:

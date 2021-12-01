@@ -21,6 +21,7 @@
 #include <memory>
 
 #include <iostream>  // DEBUG
+#include <generic_type_support/generic_type_support.hpp>  // DEBUG
 
 class QWidget;
 class QLayout;
@@ -45,6 +46,11 @@ public:
   {
     std::cout << name_ << std::endl;
     std::cout << message << std::endl;
+    if (yaml_["topic"]["data"])
+    {
+      generic_type_support::GeneticTypeAccess(yaml_["topic"]["data"].as<std::string>());
+    }
+
   }
   // static void AddChild(QWidget * parent, const std::unique_ptr<Interface> & base);
   // static void AddChild(QLayout * parent, const std::unique_ptr<Interface> & base);

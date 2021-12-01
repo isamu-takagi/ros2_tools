@@ -13,11 +13,16 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-ament_auto_add_executable(${PROJECT_NAME}
+ament_auto_add_executable(${PROJECT_NAME}_node
   src/library/typesupport.cpp
   #src/library/debug.cpp
   src/library/message.cpp
   src/samples/test.cpp
+)
+
+ament_auto_add_library(${PROJECT_NAME} SHARED
+  src/library/typesupport.cpp
+  src/library/message.cpp
 )
 
 if(BUILD_TESTING)
