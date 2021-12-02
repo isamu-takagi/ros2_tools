@@ -22,12 +22,12 @@
 #include "builder/factory.hpp"  // TODO: replace forward declaration
 
 
-class MultiDataMonitorPanel : public rviz_common::Panel
+class MultiDataMonitor : public rviz_common::Panel
 {
   Q_OBJECT
 
 public:
-  explicit MultiDataMonitorPanel(QWidget * parent = nullptr);
+  explicit MultiDataMonitor(QWidget * parent = nullptr);
   void onInitialize() override;
   void save(rviz_common::Config config) const override;
   void load(const rviz_common::Config & config) override;

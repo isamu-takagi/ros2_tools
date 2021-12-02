@@ -18,24 +18,24 @@
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 
-MultiDataMonitorPanel::MultiDataMonitorPanel(QWidget * parent)
+MultiDataMonitor::MultiDataMonitor(QWidget * parent)
 : rviz_common::Panel(parent)
 {
 
 }
 
-void MultiDataMonitorPanel::save(rviz_common::Config config) const
+void MultiDataMonitor::save(rviz_common::Config config) const
 {
   std::cout << "config: save" << std::endl;
   Panel::save(config);
   config.mapSetValue("File", path_);
 }
 
-void MultiDataMonitorPanel::onInitialize()
+void MultiDataMonitor::onInitialize()
 {
 }
 
-void MultiDataMonitorPanel::load(const rviz_common::Config & config)
+void MultiDataMonitor::load(const rviz_common::Config & config)
 {
   Panel::load(config);
   config.mapGetString("File", &path_);
@@ -68,9 +68,9 @@ void MultiDataMonitorPanel::load(const rviz_common::Config & config)
   }
 }
 
-void MultiDataMonitorPanel::update()
+void MultiDataMonitor::update()
 {
 }
 
 #include <pluginlib/class_list_macros.hpp>
-PLUGINLIB_EXPORT_CLASS(MultiDataMonitorPanel, rviz_common::Panel)
+PLUGINLIB_EXPORT_CLASS(MultiDataMonitor, rviz_common::Panel)
