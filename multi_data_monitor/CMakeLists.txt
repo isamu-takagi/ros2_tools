@@ -24,6 +24,8 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
   src/manager.cpp
   src/panel.hpp
   src/panel.cpp
+  src/monitors/subscription.hpp
+  src/monitors/subscription.cpp
   src/monitors/monitor.hpp
   src/monitors/monitor.cpp
   src/monitors/layout/grid.hpp

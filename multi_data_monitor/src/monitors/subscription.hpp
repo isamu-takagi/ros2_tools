@@ -12,32 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef monitors__MANAGER_HPP_
-#define monitors__MANAGER_HPP_
+#ifndef TOPIC__SUBSCRIPTION_HPP_
+#define TOPIC__SUBSCRIPTION_HPP_
 
-#include "monitors/monitor.hpp"
-#include "monitors/subscription.hpp"
+#include "monitor.hpp"
 #include <rclcpp/rclcpp.hpp>
-#include <yaml-cpp/yaml.h>
-#include <map>
-
-#include "generic_type_support/generic_type_support.hpp"
 
 namespace monitors
 {
 
-class Manager
+class TopicSubscription
 {
 public:
-  void CreateNode(const std::string & name, const YAML::Node & yaml);
-  void Subscribe(const rclcpp::Node::SharedPtr node);
-  void Build(QWidget * panel, const std::string & name);
+  TopicSubscription(const rclcpp::Node::SharedPtr node, std::vector<Monitor *> monitors);
+  ~TopicSubscription();
+  void Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const;
 
 private:
-  Monitors monitors_;
-  std::map<std::string, std::unique_ptr<TopicSubscription>> subscriptions_;
+  std::unique_ptr<generic_type_support::GenericMessageSupport> support_;
+  std::vector<Monitor *> monitors_;
+  rclcpp::GenericSubscription::SharedPtr subscription_;
 };
 
 }  // namespace monitors
 
-#endif  // monitors__MANAGER_HPP_
+#endif  // TOPIC__SUBSCRIPTION_HPP_
