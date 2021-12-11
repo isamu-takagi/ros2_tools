@@ -13,7 +13,8 @@
 // limitations under the License.
 
 #include "manager.hpp"
-#include "monitors/layout/grid.hpp"
+#include "monitors/layout/matrix.hpp"
+#include "monitors/widget/simple.hpp"
 #include "monitors/widget/titled.hpp"
 #include <QWidget>
 #include <string>
@@ -32,11 +33,15 @@ void Manager::CreateMonitors()
 
     if (type == "matrix")
     {
-      return std::make_shared<Grid>(name, yaml);
+      return std::make_shared<Matrix>(name, yaml);
     }
     if (type == "titled")
     {
       return std::make_shared<Titled>(name, yaml);
+    }
+    if (type == "simple")
+    {
+      return std::make_shared<Simple>(name, yaml);
     }
 
     std::cout << "  unknown type: " << type << std::endl;

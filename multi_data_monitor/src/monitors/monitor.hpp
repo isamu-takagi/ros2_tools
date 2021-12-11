@@ -43,7 +43,7 @@ public:
   QWidget * GetWidget() {return widget_;}
   QLayout * GetLayout() {return layout_;}
   virtual void Build(MonitorDict & monitors) = 0;
-  virtual void Callback([[maybe_unused]] const YAML::Node & message) const {};
+  virtual void Callback([[maybe_unused]] const YAML::Node & message) {};
 
   std::string GetName();
   std::string GetTopicName();

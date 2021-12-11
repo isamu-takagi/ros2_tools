@@ -16,6 +16,7 @@
 #define monitors__WIDGET__SIMPLE_HPP_
 
 #include "../monitor.hpp"
+#include <map>  // TODO: style class
 
 class QLabel;
 
@@ -27,10 +28,12 @@ class Simple : public Monitor
 public:
   using Monitor::Monitor;
   void Build(MonitorDict & monitors) override;
-  void Callback(const YAML::Node & message) const override;
+  void Callback(const YAML::Node & message) override;
 
 private:
   QLabel * label;
+  std::map<std::string, std::string> style_color_;
+  std::string prev_;
 };
 
 }  // namespace monitors

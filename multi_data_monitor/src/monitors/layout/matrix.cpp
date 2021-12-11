@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "grid.hpp"
+#include "matrix.hpp"
 #include <QGridLayout>
 
 #include <iostream>
@@ -20,7 +20,7 @@
 namespace monitors
 {
 
-void Grid::Build(MonitorDict & monitors)
+void Matrix::Build(MonitorDict & monitors)
 {
   layout_ = grid = new QGridLayout();
 

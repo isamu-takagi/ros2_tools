@@ -28,8 +28,8 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
   src/monitors/subscription.cpp
   src/monitors/monitor.hpp
   src/monitors/monitor.cpp
-  src/monitors/layout/grid.hpp
-  src/monitors/layout/grid.cpp
+  src/monitors/layout/matrix.hpp
+  src/monitors/layout/matrix.cpp
   src/monitors/widget/simple.hpp
   src/monitors/widget/simple.cpp
   src/monitors/widget/titled.hpp

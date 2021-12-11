@@ -27,7 +27,7 @@ class Titled : public Monitor
 public:
   using Monitor::Monitor;
   void Build(MonitorDict & monitors) override;
-  void Callback(const YAML::Node & message) const override;
+  void Callback(const YAML::Node & message) override;
 
 private:
   QLabel * value;

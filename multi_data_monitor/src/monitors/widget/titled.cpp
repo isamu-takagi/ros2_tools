@@ -29,18 +29,15 @@ void Titled::Build([[maybe_unused]] MonitorDict & monitors)
   title->setAlignment(Qt::AlignCenter);
   //value->setToolTip();
 
-  value->setStyleSheet("border-width: 1px 1px 1px 1px; border-style: solid;");
-  title->setStyleSheet("border-width: 0px 1px 1px 1px; border-style: solid;");
-  // background-color
-  // border-color
-  // font-size
+  value->setStyleSheet("border-width: 1px 1px 1px 1px; border-style: solid; font-size: 24px;");
+  title->setStyleSheet("border-width: 0px 1px 1px 1px; border-style: solid; font-size: 12px;");
 
   layout_->addWidget(value);
   layout_->addWidget(title);
   layout_->setSpacing(0);
 }
 
-void Titled::Callback(const YAML::Node & message) const
+void Titled::Callback(const YAML::Node & message)
 {
   const auto text = access.Get(message).as<std::string>();
   value->setText(QString::fromStdString(text));

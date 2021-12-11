@@ -22,7 +22,7 @@ class QGridLayout;
 namespace monitors
 {
 
-class Grid : public Monitor
+class Matrix : public Monitor
 {
 public:
   using Monitor::Monitor;

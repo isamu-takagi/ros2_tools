@@ -18,15 +18,40 @@
 namespace monitors
 {
 
+constexpr auto default_style = "border-width: 1px 1px 1px 1px; border-style: solid; font-size: 14px;";
+
 void Simple::Build([[maybe_unused]] MonitorDict & monitors)
 {
   widget_ = label = new QLabel("test");
+  label->setAlignment(Qt::AlignCenter);
+  label->setStyleSheet(default_style);
+
+  if (yaml_["color"])
+  {
+    for (const auto & data : yaml_["color"])
+    {
+      const auto match = data["match"].as<std::string>();
+      const auto color = data["color"].as<std::string>();
+      style_color_[match] = " background-color: " + color + ";";
+    }
+  }
 }
 
-void Simple::Callback(const YAML::Node & message) const
+void Simple::Callback(const YAML::Node & message)
 {
   const auto text = access.Get(message).as<std::string>();
-  label->setText(QString::fromStdString(text));
+  if (prev_ != text)
+  {
+    std::string style = default_style;
+    if (style_color_.count(text))
+    {
+      style += style_color_.at(text);
+    }
+    label->setText(QString::fromStdString(text));
+    label->setStyleSheet(QString::fromStdString(style));
+
+    prev_ = text;
+  }
 }
 
 }  // namespace monitors
