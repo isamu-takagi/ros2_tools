@@ -19,7 +19,6 @@
 #include "monitors/subscription.hpp"
 #include <rclcpp/rclcpp.hpp>
 #include <yaml-cpp/yaml.h>
-#include <map>
 
 #include "generic_type_support/generic_type_support.hpp"
 
@@ -29,13 +28,16 @@ namespace monitors
 class Manager
 {
 public:
-  void CreateNode(const std::string & name, const YAML::Node & yaml);
-  void Subscribe(const rclcpp::Node::SharedPtr node);
-  void Build(QWidget * panel, const std::string & name);
+  void Load(const std::string & path);
+  void CreateMonitors();
+  void CreateSubscription(const rclcpp::Node::SharedPtr & node);
+  void Build(QWidget * panel);
 
 private:
-  Monitors monitors_;
-  std::map<std::string, std::unique_ptr<TopicSubscription>> subscriptions_;
+
+  MonitorDict monitors_;
+  std::vector<std::unique_ptr<TopicSubscription>> subscriptions_;
+  YAML::Node yaml_;
 };
 
 }  // namespace monitors

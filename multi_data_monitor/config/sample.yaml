@@ -1,7 +1,7 @@
 # --------------------------------------------------
 # headers
 # --------------------------------------------------
-version: 0
+version: alpha 1
 root: main
 
 # --------------------------------------------------
@@ -22,31 +22,23 @@ monitors:
   data_name_1:
     class: titled
     title: Second
-    topic:
-      name: /monitor/header
-      type: std_msgs/msg/Header
-      data: stamp.sec
+    topic: {name: /monitor/header, type: std_msgs/msg/Header}
+    field: {name: stamp.sec, type: auto}
 
   data_name_2:
     class: titled
     title: Nanosecond
-    topic:
-      name: /monitor/header
-      type: std_msgs/msg/Header
-      data: stamp.nanosec
+    topic: {name: /monitor/header, type: std_msgs/msg/Header}
+    field: {name: stamp.nanosec, type: auto}
 
   data_name_3:
     class: titled
     title: Frame
-    topic:
-      name: /monitor/header
-      type: std_msgs/msg/Header
-      data: frame_id
+    topic: {name: /monitor/header, type: std_msgs/msg/Header}
+    field: {name: frame_id, type: auto}
 
   data_name_4:
     class: titled
     title: Accel (m/s^2)
-    topic:
-      name: /monitor/data
-      type: std_msgs/msg/Float32
-      data: data
+    topic: {name: /monitor/data, type: std_msgs/msg/Float32}
+    field: {name: data, type: auto}

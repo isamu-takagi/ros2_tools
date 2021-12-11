@@ -19,7 +19,7 @@
 namespace monitors
 {
 
-TopicSubscription::TopicSubscription(const rclcpp::Node::SharedPtr node, std::vector<Monitor *> monitors)
+TopicSubscription::TopicSubscription(const rclcpp::Node::SharedPtr & node, const MonitorList & monitors)
 {
   using namespace std::placeholders;
   subscription_ = node->create_generic_subscription(
@@ -33,18 +33,12 @@ TopicSubscription::TopicSubscription(const rclcpp::Node::SharedPtr node, std::ve
   support_ = std::make_unique<generic_type_support::GenericMessageSupport>(monitors[0]->GetTopicType());
 }
 
-TopicSubscription::~TopicSubscription()
-{
-  std::cout << "Destruct TopicSubscription" << std::endl;
-}
-
 void TopicSubscription::Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const
 {
-  std::cout << "callback" << std::endl;
   const YAML::Node yaml = support_->DeserializeYAML(*serialized);
-  for (const Monitor * monitor : monitors_)
+  for (const auto & monitor : monitors_)
   {
-  monitor->Callback(yaml);
+    monitor->Callback(yaml);
   }
 }
 

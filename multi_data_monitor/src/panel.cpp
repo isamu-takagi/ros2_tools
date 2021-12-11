@@ -40,25 +40,18 @@ void MultiDataMonitor::load(const rviz_common::Config & config)
   Panel::load(config);
   config.mapGetString("File", &path_);
 
-  const auto rviz_ros_node = getDisplayContext()->getRosNodeAbstraction();
-
-  try
+	try
   {
+    const auto node = getDisplayContext()->getRosNodeAbstraction();
+    const auto path = path_.toStdString();
     std::cout << std::string(100, '=') << std::endl;
-    std::cout << "File: " << path_.toStdString() << std::endl;
-
-    YAML::Node yaml = YAML::LoadFile(path_.toStdString());
-    std::cout << "format version: " << yaml["version"].as<int>() << std::endl;
-
+    manager_.Load(path);
     std::cout << std::string(100, '=') << std::endl;
-    for(const auto & node : yaml["monitors"])
-    {
-      manager_.CreateNode(node.first.as<std::string>(), node.second);
-    }
+    manager_.CreateMonitors();
     std::cout << std::string(100, '=') << std::endl;
-    manager_.Subscribe(rviz_ros_node.lock()->get_raw_node());
+    manager_.CreateSubscription(node.lock()->get_raw_node());
     std::cout << std::string(100, '=') << std::endl;
-    manager_.Build(this, yaml["root"].as<std::string>());
+    manager_.Build(this);
     std::cout << std::string(100, '=') << std::endl;
   }
   catch(YAML::BadFile & error)

@@ -24,13 +24,12 @@ namespace monitors
 class TopicSubscription
 {
 public:
-  TopicSubscription(const rclcpp::Node::SharedPtr node, std::vector<Monitor *> monitors);
-  ~TopicSubscription();
+  TopicSubscription(const rclcpp::Node::SharedPtr & node, const MonitorList & monitors);
   void Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const;
 
 private:
   std::unique_ptr<generic_type_support::GenericMessageSupport> support_;
-  std::vector<Monitor *> monitors_;
+  MonitorList monitors_;
   rclcpp::GenericSubscription::SharedPtr subscription_;
 };
 

@@ -18,7 +18,7 @@
 namespace monitors
 {
 
-void Simple::Build([[maybe_unused]] Monitors & monitors)
+void Simple::Build([[maybe_unused]] MonitorDict & monitors)
 {
   widget_ = label = new QLabel("test");
 }

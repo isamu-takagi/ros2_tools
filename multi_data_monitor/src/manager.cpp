@@ -23,60 +23,69 @@
 namespace monitors
 {
 
-void Manager::CreateNode(const std::string & name, const YAML::Node & yaml)
+void Manager::CreateMonitors()
 {
-	const auto type = yaml["class"].as<std::string>();
-	std::cout << "create node: " << name << "  " << type << std::endl;
+  const auto CreateMonitor = [](const std::string & name, const YAML::Node & yaml) -> std::shared_ptr<Monitor>
+  {
+    const auto type = yaml["class"].as<std::string>();
+    std::cout << "create node: " << name << "  " << type << std::endl;
 
-	std::unique_ptr<Monitor> monitors = nullptr;
-	if (type == "matrix")
-	{
-		monitors_[name] = std::make_unique<Grid>(name, yaml);
-		return;
-	}
-	if (type == "titled")
-	{
-		monitors_[name] = std::make_unique<Titled>(name, yaml);
-		return;
-	}
-	std::cout << "  unknown type: " << type << std::endl;
+    if (type == "matrix")
+    {
+      return std::make_shared<Grid>(name, yaml);
+    }
+    if (type == "titled")
+    {
+      return std::make_shared<Titled>(name, yaml);
+    }
+
+    std::cout << "  unknown type: " << type << std::endl;
+    return nullptr;
+  };
+
+  for(const auto & monitor : yaml_["monitors"])
+  {
+    const auto name = monitor.first.as<std::string>();
+    monitors_[name] = CreateMonitor(name, monitor.second);
+  }
 }
 
-void Manager::Subscribe(const rclcpp::Node::SharedPtr node)
+void Manager::CreateSubscription(const rclcpp::Node::SharedPtr & node)
 {
-	std::map<std::string, std::vector<Monitor *>> groups;
-	for (const auto & pair : monitors_)
+	std::map<std::string, MonitorList> topics;
+	for (const auto & [_, monitor] : monitors_)
 	{
-		const std::string topic = pair.second->GetTopicName();
-		if (!topic.empty())
+		const std::string name = monitor->GetTopicName();
+		if (!name.empty())
 		{
-			groups[topic].push_back(pair.second.get());  // check release order
+			topics[name].push_back(monitor);
 		}
 	}
 
-  for (const auto & [topic, monitors] : groups)
+  for (const auto & topic : topics)
   {
-    std::cout << topic << std::endl;
-    for (const auto & monitor : monitors)
+    std::cout << topic.first << std::endl;
+    for (const auto & monitor : topic.second)
     {
       std::cout << "  " << monitor->GetName() << std::endl;
     }
-    subscriptions_[topic] = std::make_unique<TopicSubscription>(node, monitors);
+    auto subscription = std::make_unique<TopicSubscription>(node, topic.second);
+    subscriptions_.push_back(std::move(subscription));
   }
-
 }
 
-void Manager::Build(QWidget * panel, const std::string & name)
+void Manager::Build(QWidget * panel)
 {
-  const auto & root = monitors_.at(name);
+  const auto name = yaml_["root"].as<std::string>();
+  const auto root = monitors_.at(name);
   root->Build(monitors_);
 
   const auto widget = root->GetWidget();
   std::cout << "widget: " << widget << std::endl;
   if (widget)
   {
-	// TODO: use dummy layout
-	//panel->Widget(widget)
+    // TODO: use dummy layout
+    //panel->Widget(widget)
   }
 
   const auto layout = root->GetLayout();
@@ -85,6 +94,12 @@ void Manager::Build(QWidget * panel, const std::string & name)
   {
 	panel->setLayout(layout);
   }
+}
+
+void Manager::Load(const std::string & path)
+{
+  yaml_ = YAML::LoadFile(path);
+  std::cout << "format version: " << yaml_["version"].as<std::string>() << std::endl;
 }
 
 }  // namespace monitors

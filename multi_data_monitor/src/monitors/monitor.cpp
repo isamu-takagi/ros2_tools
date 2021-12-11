@@ -23,9 +23,10 @@ Monitor::Monitor(const std::string & name, const YAML::Node & yaml)
   name_ = name;
   yaml_ = yaml;
 
-  if (yaml_["topic"]["data"])
+  const auto & field = yaml_["field"]["name"];
+  if (field)
   {
-    access = generic_type_support::GeneticTypeAccess(yaml_["topic"]["data"].as<std::string>());
+    access = generic_type_support::GeneticTypeAccess(field.as<std::string>());
   }
 }
 
@@ -36,14 +37,14 @@ std::string Monitor::GetName()
 
 std::string Monitor::GetTopicName()
 {
-  if (!yaml_["topic"]["name"]) { return ""; }
-  return yaml_["topic"]["name"].as<std::string>();
+  const auto & name = yaml_["topic"]["name"];
+  return name ? name.as<std::string>() : "";
 }
 
 std::string Monitor::GetTopicType()
 {
-  if (!yaml_["topic"]["type"]) { return ""; }
-  return yaml_["topic"]["type"].as<std::string>();
+  const auto & type = yaml_["topic"]["type"];
+  return type ? type.as<std::string>() : "";
 }
 
 /*

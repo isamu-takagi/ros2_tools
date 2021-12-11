@@ -26,7 +26,7 @@ class Titled : public Monitor
 {
 public:
   using Monitor::Monitor;
-  void Build(Monitors & monitors) override;
+  void Build(MonitorDict & monitors) override;
   void Callback(const YAML::Node & message) const override;
 
 private:

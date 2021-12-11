@@ -20,7 +20,7 @@
 namespace monitors
 {
 
-void Grid::Build(Monitors & monitors)
+void Grid::Build(MonitorDict & monitors)
 {
   layout_ = grid = new QGridLayout();
 

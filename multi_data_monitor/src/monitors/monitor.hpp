@@ -30,7 +30,8 @@ namespace monitors
 {
 
 class Monitor;
-using Monitors = std::map<std::string, std::unique_ptr<Monitor>>;
+using MonitorList = std::vector<std::shared_ptr<Monitor>>;
+using MonitorDict = std::map<std::string, std::shared_ptr<Monitor>>;
 
 class Monitor
 {
@@ -41,11 +42,8 @@ public:
   // TODO: merge (Build, GetWidget, GetLayout)
   QWidget * GetWidget() {return widget_;}
   QLayout * GetLayout() {return layout_;}
-  virtual void Build(Monitors & monitors) = 0;
+  virtual void Build(MonitorDict & monitors) = 0;
   virtual void Callback([[maybe_unused]] const YAML::Node & message) const {};
-
-  // static void AddChild(QWidget * parent, const std::unique_ptr<Monitor> & base);
-  // static void AddChild(QLayout * parent, const std::unique_ptr<Monitor> & base);
 
   std::string GetName();
   std::string GetTopicName();

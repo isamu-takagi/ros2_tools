@@ -19,7 +19,7 @@
 namespace monitors
 {
 
-void Titled::Build([[maybe_unused]] Monitors & monitors)
+void Titled::Build([[maybe_unused]] MonitorDict & monitors)
 {
   layout_ = new QVBoxLayout();
   value = new QLabel("value");
