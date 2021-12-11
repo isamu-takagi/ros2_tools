@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "interface.hpp"
+#include "monitor.hpp"
 #include <string>
 
-namespace builder
+namespace monitors
 {
 
-Interface::Interface(const std::string & name, const YAML::Node & yaml)
+Monitor::Monitor(const std::string & name, const YAML::Node & yaml)
 {
   name_ = name;
   yaml_ = yaml;
@@ -29,18 +29,18 @@ Interface::Interface(const std::string & name, const YAML::Node & yaml)
   }
 }
 
-std::string Interface::GetName()
+std::string Monitor::GetName()
 {
   return name_;
 }
 
-std::string Interface::GetTopicName()
+std::string Monitor::GetTopicName()
 {
   if (!yaml_["topic"]["name"]) { return ""; }
   return yaml_["topic"]["name"].as<std::string>();
 }
 
-std::string Interface::GetTopicType()
+std::string Monitor::GetTopicType()
 {
   if (!yaml_["topic"]["type"]) { return ""; }
   return yaml_["topic"]["type"].as<std::string>();
@@ -66,4 +66,4 @@ void NodeBase::AddChild(QLayout * parent, const std::unique_ptr<NodeBase> & base
 }
 */
 
-}  // namespace builder
+}  // namespace monitors

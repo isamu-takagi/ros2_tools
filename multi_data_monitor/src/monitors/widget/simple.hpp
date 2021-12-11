@@ -12,26 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BUILDER__LAYOUT__GRID_HPP_
-#define BUILDER__LAYOUT__GRID_HPP_
+#ifndef monitors__WIDGET__SIMPLE_HPP_
+#define monitors__WIDGET__SIMPLE_HPP_
 
-#include "../interface.hpp"
+#include "../monitor.hpp"
 
-class QGridLayout;
+class QLabel;
 
-namespace builder
+namespace monitors
 {
 
-class Grid : public Interface
+class Simple : public Monitor
 {
 public:
-  using Interface::Interface;
-  void Build(Dictionary & dict) override;
+  using Monitor::Monitor;
+  void Build(Monitors & monitors) override;
+  void Callback(const YAML::Node & message) const override;
 
 private:
-  QGridLayout * grid;
+  QLabel * label;
 };
 
-}  // namespace builder
+}  // namespace monitors
 
-#endif  // BUILDER__LAYOUT__GRID_HPP_
+#endif  // monitors__WIDGET__SIMPLE_HPP_

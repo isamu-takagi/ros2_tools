@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "factory.hpp"
+#include "manager.hpp"
 #include "layout/grid.hpp"
 #include "widget/titled.hpp"
 #include <QWidget>
@@ -20,32 +20,32 @@
 
 #include <iostream>
 
-namespace builder
+namespace monitors
 {
 
-void Factory::CreateNode(const std::string & name, const YAML::Node & yaml)
+void Manager::CreateNode(const std::string & name, const YAML::Node & yaml)
 {
 	const auto type = yaml["class"].as<std::string>();
 	std::cout << "create node: " << name << "  " << type << std::endl;
 
-	std::unique_ptr<Interface> builder = nullptr;
+	std::unique_ptr<Monitor> monitors = nullptr;
 	if (type == "matrix")
 	{
-		dictionary_[name] = std::make_unique<Grid>(name, yaml);
+		monitors_[name] = std::make_unique<Grid>(name, yaml);
 		return;
 	}
 	if (type == "titled")
 	{
-		dictionary_[name] = std::make_unique<Titled>(name, yaml);
+		monitors_[name] = std::make_unique<Titled>(name, yaml);
 		return;
 	}
 	std::cout << "  unknown type: " << type << std::endl;
 }
 
-void Factory::Subscribe(const rclcpp::Node::SharedPtr node)
+void Manager::Subscribe(const rclcpp::Node::SharedPtr node)
 {
-	std::map<std::string, std::vector<Interface *>> groups;
-	for (const auto & pair : dictionary_)
+	std::map<std::string, std::vector<Monitor *>> groups;
+	for (const auto & pair : monitors_)
 	{
 		const std::string topic = pair.second->GetTopicName();
 		if (!topic.empty())
@@ -54,22 +54,22 @@ void Factory::Subscribe(const rclcpp::Node::SharedPtr node)
 		}
 	}
 
-  for (const auto & [topic, views] : groups)
+  for (const auto & [topic, monitors] : groups)
   {
     std::cout << topic << std::endl;
-    for (const auto & view : views)
+    for (const auto & monitor : monitors)
     {
-      std::cout << "  " << view->GetName() << std::endl;
+      std::cout << "  " << monitor->GetName() << std::endl;
     }
-    subscriptions_[topic] = std::make_unique<TopicSubscription>(node, views);
+    subscriptions_[topic] = std::make_unique<TopicSubscription>(node, monitors);
   }
 
 }
 
-void Factory::Build(QWidget * panel)
+void Manager::Build(QWidget * panel, const std::string & name)
 {
-  const auto & root = dictionary_.at("root");
-  root->Build(dictionary_);
+  const auto & root = monitors_.at(name);
+  root->Build(monitors_);
 
   const auto widget = root->GetWidget();
   std::cout << "widget: " << widget << std::endl;
@@ -87,4 +87,4 @@ void Factory::Build(QWidget * panel)
   }
 }
 
-}  // namespace builder
+}  // namespace monitors

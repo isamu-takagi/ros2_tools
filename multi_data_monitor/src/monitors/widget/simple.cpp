@@ -12,27 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BUILDER__WIDGET__SIMPLE_HPP_
-#define BUILDER__WIDGET__SIMPLE_HPP_
+#include "simple.hpp"
+#include <QLabel>
 
-#include "../interface.hpp"
-
-class QLabel;
-
-namespace builder
+namespace monitors
 {
 
-class Simple : public Interface
+void Simple::Build([[maybe_unused]] Monitors & monitors)
 {
-public:
-  using Interface::Interface;
-  void Build(Dictionary & dict) override;
-  void Callback(const YAML::Node & message) const override;
+  widget_ = label = new QLabel("test");
+}
 
-private:
-  QLabel * label;
-};
+void Simple::Callback(const YAML::Node & message) const
+{
+  const auto text = access.Get(message).as<std::string>();
+  label->setText(QString::fromStdString(text));
+}
 
-}  // namespace builder
-
-#endif  // BUILDER__WIDGET__SIMPLE_HPP_
+}  // namespace monitors

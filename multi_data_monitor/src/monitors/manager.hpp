@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BUILDER__FACTORY_HPP_
-#define BUILDER__FACTORY_HPP_
+#ifndef monitors__MANAGER_HPP_
+#define monitors__MANAGER_HPP_
 
-#include "interface.hpp"
+#include "monitor.hpp"
 #include <rclcpp/rclcpp.hpp>
 #include <yaml-cpp/yaml.h>
 #include <map>
@@ -23,23 +23,23 @@
 
 #include "generic_type_support/generic_type_support.hpp"
 
-namespace builder
+namespace monitors
 {
 
 struct TopicSubscription
 {
-  TopicSubscription(const rclcpp::Node::SharedPtr node, std::vector<Interface *> interfaces)
+  TopicSubscription(const rclcpp::Node::SharedPtr node, std::vector<Monitor *> monitors)
   {
     using namespace std::placeholders;
-    subscription = node->create_generic_subscription(
-      interfaces[0]->GetTopicName(),
-      interfaces[0]->GetTopicType(),
+    subscription_ = node->create_generic_subscription(
+      monitors[0]->GetTopicName(),
+      monitors[0]->GetTopicType(),
       rclcpp::QoS(1),
       std::bind(&TopicSubscription::Callback, this, _1));
-    std::cout << "create_generic_subscription: " << interfaces[0]->GetTopicName() << " " << interfaces[0]->GetTopicType() << std::endl;
+    std::cout << "create_generic_subscription: " << monitors[0]->GetTopicName() << " " << monitors[0]->GetTopicType() << std::endl;
 
-    views = interfaces;
-    support = std::make_unique<generic_type_support::GenericMessageSupport>(interfaces[0]->GetTopicType());
+    monitors_ = monitors;
+    support_ = std::make_unique<generic_type_support::GenericMessageSupport>(monitors[0]->GetTopicType());
   }
 
   ~TopicSubscription()
@@ -50,30 +50,30 @@ struct TopicSubscription
   void Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const
   {
     std::cout << "callback" << std::endl;
-    const YAML::Node yaml = support->DeserializeYAML(*serialized);
-    for (const Interface * view : views)
+    const YAML::Node yaml = support_->DeserializeYAML(*serialized);
+    for (const Monitor * monitor : monitors_)
     {
-      view->Callback(yaml);
+      monitor->Callback(yaml);
     }
   }
 
-  std::unique_ptr<generic_type_support::GenericMessageSupport> support;
-  std::vector<Interface *> views;
-  rclcpp::GenericSubscription::SharedPtr subscription;
+  std::unique_ptr<generic_type_support::GenericMessageSupport> support_;
+  std::vector<Monitor *> monitors_;
+  rclcpp::GenericSubscription::SharedPtr subscription_;
 };
 
-class Factory
+class Manager
 {
 public:
   void CreateNode(const std::string & name, const YAML::Node & yaml);
   void Subscribe(const rclcpp::Node::SharedPtr node);
-  void Build(QWidget * panel);
+  void Build(QWidget * panel, const std::string & name);
 
 private:
-  Dictionary dictionary_;
+  Monitors monitors_;
   std::map<std::string, std::unique_ptr<TopicSubscription>> subscriptions_;
 };
 
-}  // namespace builder
+}  // namespace monitors
 
-#endif  // BUILDER__FACTORY_HPP_
+#endif  // monitors__MANAGER_HPP_

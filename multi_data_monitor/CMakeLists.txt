@@ -22,16 +22,16 @@ add_definitions(-DQT_NO_KEYWORDS)
 ament_auto_add_library(${PROJECT_NAME} SHARED
   src/main_panel.hpp
   src/main_panel.cpp
-  src/builder/interface.hpp
-  src/builder/interface.cpp
-  src/builder/factory.hpp
-  src/builder/factory.cpp
-  src/builder/layout/grid.hpp
-  src/builder/layout/grid.cpp
-  src/builder/widget/simple.hpp
-  src/builder/widget/simple.cpp
-  src/builder/widget/titled.hpp
-  src/builder/widget/titled.cpp
+  src/monitors/manager.hpp
+  src/monitors/manager.cpp
+  src/monitors/monitor.hpp
+  src/monitors/monitor.cpp
+  src/monitors/layout/grid.hpp
+  src/monitors/layout/grid.cpp
+  src/monitors/widget/simple.hpp
+  src/monitors/widget/simple.cpp
+  src/monitors/widget/titled.hpp
+  src/monitors/widget/titled.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   ${QT_LIBRARIES}

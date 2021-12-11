@@ -17,10 +17,10 @@
 
 #include <iostream>
 
-namespace builder
+namespace monitors
 {
 
-void Grid::Build(Dictionary & dict)
+void Grid::Build(Monitors & monitors)
 {
   layout_ = grid = new QGridLayout();
 
@@ -31,10 +31,10 @@ void Grid::Build(Dictionary & dict)
 
   for (const auto & node : yaml_["children"])
   {
-    const auto & child = dict[node.as<std::string>()];
+    const auto & child = monitors[node.as<std::string>()];
     if (child)
     {
-      child->Build(dict);
+      child->Build(monitors);
       const auto widget = child->GetWidget();
       const auto layout = child->GetLayout();
       if (widget) { grid->addWidget(widget, y, x); }
@@ -48,4 +48,4 @@ void Grid::Build(Dictionary & dict)
   }
 }
 
-}  // namespace builder
+}  // namespace monitors

@@ -12,21 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "simple.hpp"
-#include <QLabel>
+#ifndef monitors__LAYOUT__GRID_HPP_
+#define monitors__LAYOUT__GRID_HPP_
 
-namespace builder
+#include "../monitor.hpp"
+
+class QGridLayout;
+
+namespace monitors
 {
 
-void Simple::Build([[maybe_unused]] Dictionary & dict)
+class Grid : public Monitor
 {
-  widget_ = label = new QLabel("test");
-}
+public:
+  using Monitor::Monitor;
+  void Build(Monitors & monitors) override;
 
-void Simple::Callback(const YAML::Node & message) const
-{
-  const auto text = access.Get(message).as<std::string>();
-  label->setText(QString::fromStdString(text));
-}
+private:
+  QGridLayout * grid;
+};
 
-}  // namespace builder
+}  // namespace monitors
+
+#endif  // monitors__LAYOUT__GRID_HPP_

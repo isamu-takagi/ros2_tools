@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BUILDER__INTERFACE_HPP_
-#define BUILDER__INTERFACE_HPP_
+#ifndef monitors__MONITOR_HPP_
+#define monitors__MONITOR_HPP_
 
 #include <yaml-cpp/yaml.h>
 #include <string>
@@ -26,26 +26,26 @@
 class QWidget;
 class QLayout;
 
-namespace builder
+namespace monitors
 {
 
-class Interface;
-using Dictionary = std::map<std::string, std::unique_ptr<Interface>>;
+class Monitor;
+using Monitors = std::map<std::string, std::unique_ptr<Monitor>>;
 
-class Interface
+class Monitor
 {
 public:
-  Interface(const std::string & name, const YAML::Node & yaml);
-  virtual ~Interface() = default;
+  Monitor(const std::string & name, const YAML::Node & yaml);
+  virtual ~Monitor() = default;
 
   // TODO: merge (Build, GetWidget, GetLayout)
   QWidget * GetWidget() {return widget_;}
   QLayout * GetLayout() {return layout_;}
-  virtual void Build(Dictionary & dict) = 0;
+  virtual void Build(Monitors & monitors) = 0;
   virtual void Callback([[maybe_unused]] const YAML::Node & message) const {};
 
-  // static void AddChild(QWidget * parent, const std::unique_ptr<Interface> & base);
-  // static void AddChild(QLayout * parent, const std::unique_ptr<Interface> & base);
+  // static void AddChild(QWidget * parent, const std::unique_ptr<Monitor> & base);
+  // static void AddChild(QLayout * parent, const std::unique_ptr<Monitor> & base);
 
   std::string GetName();
   std::string GetTopicName();
@@ -59,6 +59,6 @@ protected:
   generic_type_support::GeneticTypeAccess access;
 };
 
-}  // namespace builder
+}  // namespace monitors
 
-#endif  // BUILDER__INTERFACE_HPP_
+#endif  // monitors__MONITOR_HPP_

@@ -16,10 +16,10 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-namespace builder
+namespace monitors
 {
 
-void Titled::Build([[maybe_unused]] Dictionary & dict)
+void Titled::Build([[maybe_unused]] Monitors & monitors)
 {
   layout_ = new QVBoxLayout();
   value = new QLabel("value");
@@ -46,4 +46,4 @@ void Titled::Callback(const YAML::Node & message) const
   value->setText(QString::fromStdString(text));
 }
 
-}  // namespace builder
+}  // namespace monitors

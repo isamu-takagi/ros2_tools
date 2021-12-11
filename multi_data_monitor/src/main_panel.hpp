@@ -19,7 +19,7 @@
 #include <rviz_common/panel.hpp>
 #include <rviz_common/ros_integration/ros_node_abstraction_iface.hpp>
 
-#include "builder/factory.hpp"  // TODO: replace forward declaration
+#include "monitors/manager.hpp"  // TODO: replace forward declaration
 
 
 class MultiDataMonitor : public rviz_common::Panel
@@ -37,7 +37,7 @@ public:
 private:
 protected:
   QString path_;
-  builder::Factory factory_;
+  monitors::Manager manager_;
 };
 
 #endif  // MAIN_PANEL_HPP_

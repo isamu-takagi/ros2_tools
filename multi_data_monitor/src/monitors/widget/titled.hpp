@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BUILDER__WIDGET__TITLED_HPP_
-#define BUILDER__WIDGET__TITLED_HPP_
+#ifndef monitors__WIDGET__TITLED_HPP_
+#define monitors__WIDGET__TITLED_HPP_
 
-#include "../interface.hpp"
+#include "../monitor.hpp"
 
 class QLabel;
 
-namespace builder
+namespace monitors
 {
 
-class Titled : public Interface
+class Titled : public Monitor
 {
 public:
-  using Interface::Interface;
-  void Build(Dictionary & dict) override;
+  using Monitor::Monitor;
+  void Build(Monitors & monitors) override;
   void Callback(const YAML::Node & message) const override;
 
 private:
@@ -34,6 +34,6 @@ private:
   QLabel * title;
 };
 
-}  // namespace builder
+}  // namespace monitors
 
-#endif  // BUILDER__WIDGET__TITLED_HPP_
+#endif  // monitors__WIDGET__TITLED_HPP_
