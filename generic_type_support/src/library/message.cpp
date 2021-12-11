@@ -40,7 +40,6 @@ std::vector<std::string> split(const std::string & input)
 
 GeneticTypeAccess::GeneticTypeAccess(const std::string access)
 {
-  std::cout << access << std::endl;
   for (const auto & name : split(access))
   {
     GenericTypeAccessField field;

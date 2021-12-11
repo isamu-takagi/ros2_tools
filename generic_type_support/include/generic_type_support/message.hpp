@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MESSAGE_HPP_
-#define MESSAGE_HPP_
+#ifndef GENERIC_TYPE_SUPPORT__MESSAGE_HPP_
+#define GENERIC_TYPE_SUPPORT__MESSAGE_HPP_
 
 #include "typesupport.hpp"
 
@@ -26,37 +26,37 @@ namespace generic_type_support
 
 struct GenericTypeAccessField
 {
-	enum class Type {DATA, LIST, DICT};
-	Type type;
-	std::string name;
-	std::string key;
-	int index;
+  enum class Type {DATA, LIST, DICT};
+  Type type;
+  std::string name;
+  std::string key;
+  int index;
 };
 
 struct GeneticTypeAccess
 {
 public:
-	GeneticTypeAccess() = default;
-	GeneticTypeAccess(const std::string access);
-	const YAML::Node Get(const YAML::Node & yaml) const;
+  GeneticTypeAccess() = default;
+  GeneticTypeAccess(const std::string access);
+  const YAML::Node Get(const YAML::Node & yaml) const;
 
 public:
-	std::string debug;
+  std::string debug;
 private:
-	std::vector<GenericTypeAccessField> fields;
+  std::vector<GenericTypeAccessField> fields;
 };
 
 class GenericMessageSupport
 {
 public:
-	GenericMessageSupport(const std::string & type);
-	YAML::Node DeserializeYAML(const rclcpp::SerializedMessage & serialized);
+  GenericMessageSupport(const std::string & type);
+  YAML::Node DeserializeYAML(const rclcpp::SerializedMessage & serialized);
 
 private:
-	std::shared_ptr<IntrospectionMessage> introspection_;
-	std::shared_ptr<MessageSerialization> serialization_;
+  std::shared_ptr<IntrospectionMessage> introspection_;
+  std::shared_ptr<MessageSerialization> serialization_;
 };
 
 }  // namespace generic_type_support
 
-#endif  // MESSAGE_HPP_
+#endif  // GENERIC_TYPE_SUPPORT__MESSAGE_HPP_

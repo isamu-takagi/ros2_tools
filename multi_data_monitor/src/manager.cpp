@@ -57,15 +57,15 @@ void Manager::CreateMonitors()
 
 void Manager::CreateSubscription(const rclcpp::Node::SharedPtr & node)
 {
-	std::map<std::string, MonitorList> topics;
-	for (const auto & [_, monitor] : monitors_)
-	{
-		const std::string name = monitor->GetTopicName();
-		if (!name.empty())
-		{
-			topics[name].push_back(monitor);
-		}
-	}
+  std::map<std::string, MonitorList> topics;
+  for (const auto & [_, monitor] : monitors_)
+  {
+    const std::string name = monitor->GetTopicName();
+    if (!name.empty())
+    {
+      topics[name].push_back(monitor);
+    }
+  }
 
   for (const auto & topic : topics)
   {
@@ -90,14 +90,14 @@ void Manager::Build(QWidget * panel)
   if (widget)
   {
     // TODO: use dummy layout
-    //panel->Widget(widget)
+    // panel->Widget(widget)
   }
 
   const auto layout = root->GetLayout();
   std::cout << "layout: " << layout << std::endl;
   if (layout)
   {
-	panel->setLayout(layout);
+  panel->setLayout(layout);
   }
 }
 

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TYPESUPPORT_HPP_
-#define TYPESUPPORT_HPP_
+#ifndef GENERIC_TYPE_SUPPORT__TYPESUPPORT_HPP_
+#define GENERIC_TYPE_SUPPORT__TYPESUPPORT_HPP_
 
 #include "typesupport.hpp"
 
@@ -40,46 +40,46 @@ using TypeSupportService = rosidl_typesupport_introspection_cpp::ServiceMembers;
 class IntrospectionMessage
 {
 public:
-	static std::shared_ptr<IntrospectionMessage> Load(const std::string & type);
-	IntrospectionMessage(const TypeSupportLibrary & library, const TypeSupportHandle * handle);
+  static std::shared_ptr<IntrospectionMessage> Load(const std::string & type);
+  IntrospectionMessage(const TypeSupportLibrary & library, const TypeSupportHandle * handle);
 
-	void Dump() const;
+  void Dump() const;
 
-	const auto begin() const { return fields_.begin(); }
-	const auto end() const { return fields_.end(); }
+  const auto begin() const { return fields_.begin(); }
+  const auto end() const { return fields_.end(); }
 
 //private:
-	const TypeSupportLibrary library_;
-	const TypeSupportMessage message_;
-	std::vector<IntrospectionField> fields_;
+  const TypeSupportLibrary library_;
+  const TypeSupportMessage message_;
+  std::vector<IntrospectionField> fields_;
 };
 
 class IntrospectionField
 {
 public:
-	IntrospectionField(const TypeSupportField & field);
+  IntrospectionField(const TypeSupportField & field);
 
-	void Dump() const;
+  void Dump() const;
 
 //private:
-	const TypeSupportField field_;
+  const TypeSupportField field_;
 };
 
 class IntrospectionService
 {
-	// not implemented
+  // not implemented
 };
 
 class MessageSerialization : public rclcpp::SerializationBase
 {
 public:
-	static std::shared_ptr<MessageSerialization> Load(const std::string & type);
-	MessageSerialization(const TypeSupportLibrary & library, const TypeSupportHandle * handle);
+  static std::shared_ptr<MessageSerialization> Load(const std::string & type);
+  MessageSerialization(const TypeSupportLibrary & library, const TypeSupportHandle * handle);
 
 private:
-	const TypeSupportLibrary library_;
+  const TypeSupportLibrary library_;
 };
 
 }  // namespace generic_type_support
 
-#endif  // TYPE_SUPPORT_HPP_
+#endif  // GENERIC_TYPE_SUPPORT__TYPESUPPORT_HPP_

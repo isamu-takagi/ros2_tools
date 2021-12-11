@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef monitors__MANAGER_HPP_
-#define monitors__MANAGER_HPP_
+#ifndef MANAGER_HPP_
+#define MANAGER_HPP_
 
 #include "monitors/monitor.hpp"
 #include "monitors/subscription.hpp"
@@ -34,7 +34,6 @@ public:
   void Build(QWidget * panel);
 
 private:
-
   MonitorDict monitors_;
   std::vector<std::unique_ptr<TopicSubscription>> subscriptions_;
   YAML::Node yaml_;
@@ -42,4 +41,4 @@ private:
 
 }  // namespace monitors
 
-#endif  // monitors__MANAGER_HPP_
+#endif  // MANAGER_HPP_

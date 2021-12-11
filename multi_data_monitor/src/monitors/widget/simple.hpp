@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef monitors__WIDGET__SIMPLE_HPP_
-#define monitors__WIDGET__SIMPLE_HPP_
+#ifndef MONITORS__WIDGET__SIMPLE_HPP_
+#define MONITORS__WIDGET__SIMPLE_HPP_
 
 #include "../monitor.hpp"
-#include <map>  // TODO: style class
+
+// TODO: style class
+#include <map>
+#include <string>
 
 class QLabel;
 
@@ -38,4 +41,4 @@ private:
 
 }  // namespace monitors
 
-#endif  // monitors__WIDGET__SIMPLE_HPP_
+#endif  // MONITORS__WIDGET__SIMPLE_HPP_

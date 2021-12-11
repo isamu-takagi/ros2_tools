@@ -40,7 +40,7 @@ void MultiDataMonitor::load(const rviz_common::Config & config)
   Panel::load(config);
   config.mapGetString("File", &path_);
 
-	try
+  try
   {
     const auto node = getDisplayContext()->getRosNodeAbstraction();
     const auto path = path_.toStdString();

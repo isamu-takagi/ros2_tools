@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef monitors__MONITOR_HPP_
-#define monitors__MONITOR_HPP_
+#ifndef MONITORS__MONITOR_HPP_
+#define MONITORS__MONITOR_HPP_
 
 #include <yaml-cpp/yaml.h>
 #include <string>
@@ -43,7 +43,7 @@ public:
   QWidget * GetWidget() {return widget_;}
   QLayout * GetLayout() {return layout_;}
   virtual void Build(MonitorDict & monitors) = 0;
-  virtual void Callback([[maybe_unused]] const YAML::Node & message) {};
+  virtual void Callback([[maybe_unused]] const YAML::Node & message) {}
 
   std::string GetName();
   std::string GetTopicName();
@@ -59,4 +59,4 @@ protected:
 
 }  // namespace monitors
 
-#endif  // monitors__MONITOR_HPP_
+#endif  // MONITORS__MONITOR_HPP_

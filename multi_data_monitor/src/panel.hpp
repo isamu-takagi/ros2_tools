@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MAIN_PANEL_HPP_
-#define MAIN_PANEL_HPP_
+#ifndef PANEL_HPP_
+#define PANEL_HPP_
 
 #include <rviz_common/display_context.hpp>
 #include <rviz_common/panel.hpp>
@@ -40,4 +40,4 @@ protected:
   monitors::Manager manager_;
 };
 
-#endif  // MAIN_PANEL_HPP_
+#endif  // PANEL_HPP_

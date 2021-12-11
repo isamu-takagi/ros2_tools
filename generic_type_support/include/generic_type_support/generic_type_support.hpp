@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GENERIC_TYPE_SUPPORT_HPP_
-#define GENERIC_TYPE_SUPPORT_HPP_
+#ifndef GENERIC_TYPE_SUPPORT__GENERIC_TYPE_SUPPORT_HPP_
+#define GENERIC_TYPE_SUPPORT__GENERIC_TYPE_SUPPORT_HPP_
 
 #include "message.hpp"
 
-#endif  // GENERIC_TYPE_SUPPORT_HPP_
+#endif  // GENERIC_TYPE_SUPPORT__GENERIC_TYPE_SUPPORT_HPP_

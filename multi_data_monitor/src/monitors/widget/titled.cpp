@@ -15,6 +15,7 @@
 #include "titled.hpp"
 #include <QLabel>
 #include <QVBoxLayout>
+#include <string>
 
 namespace monitors
 {
@@ -22,12 +23,12 @@ namespace monitors
 void Titled::Build([[maybe_unused]] MonitorDict & monitors)
 {
   layout_ = new QVBoxLayout();
-  value = new QLabel("value");
-  title = new QLabel("title");
+  value = new QLabel();
+  title = new QLabel(QString::fromStdString(yaml_["title"].as<std::string>()));
 
   value->setAlignment(Qt::AlignCenter);
   title->setAlignment(Qt::AlignCenter);
-  //value->setToolTip();
+  // setToolTip();
 
   value->setStyleSheet("border-width: 1px 1px 1px 1px; border-style: solid; font-size: 24px;");
   title->setStyleSheet("border-width: 0px 1px 1px 1px; border-style: solid; font-size: 12px;");

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef monitors__WIDGET__TITLED_HPP_
-#define monitors__WIDGET__TITLED_HPP_
+#ifndef MONITORS__WIDGET__TITLED_HPP_
+#define MONITORS__WIDGET__TITLED_HPP_
 
 #include "../monitor.hpp"
 
@@ -36,4 +36,4 @@ private:
 
 }  // namespace monitors
 
-#endif  // monitors__WIDGET__TITLED_HPP_
+#endif  // MONITORS__WIDGET__TITLED_HPP_
