@@ -15,7 +15,7 @@
 #ifndef monitors__MANAGER_HPP_
 #define monitors__MANAGER_HPP_
 
-#include "monitor.hpp"
+#include "monitors/monitor.hpp"
 #include <rclcpp/rclcpp.hpp>
 #include <yaml-cpp/yaml.h>
 #include <map>

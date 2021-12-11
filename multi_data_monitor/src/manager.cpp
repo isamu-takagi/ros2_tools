@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #include "manager.hpp"
-#include "layout/grid.hpp"
-#include "widget/titled.hpp"
+#include "monitors/layout/grid.hpp"
+#include "monitors/widget/titled.hpp"
 #include <QWidget>
 #include <string>
 

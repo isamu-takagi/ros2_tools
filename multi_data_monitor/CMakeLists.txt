@@ -20,10 +20,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_definitions(-DQT_NO_KEYWORDS)
 
 ament_auto_add_library(${PROJECT_NAME} SHARED
-  src/main_panel.hpp
-  src/main_panel.cpp
-  src/monitors/manager.hpp
-  src/monitors/manager.cpp
+  src/manager.hpp
+  src/manager.cpp
+  src/panel.hpp
+  src/panel.cpp
   src/monitors/monitor.hpp
   src/monitors/monitor.cpp
   src/monitors/layout/grid.hpp
