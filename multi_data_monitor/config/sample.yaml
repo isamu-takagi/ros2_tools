@@ -24,7 +24,7 @@ monitors:
     class: titled
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
     field: {name: stamp.sec, type: auto}
-    title: Second
+    title: "Second: "
 
   data_name_2:
     class: titled

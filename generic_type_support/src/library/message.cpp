@@ -18,7 +18,7 @@
 #include <rclcpp/serialized_message.hpp>
 #include <rosidl_typesupport_introspection_cpp/field_types.hpp>
 
-#include <iostream> // DEBUG
+#include <iostream>  // DEBUG
 
 namespace generic_type_support
 {

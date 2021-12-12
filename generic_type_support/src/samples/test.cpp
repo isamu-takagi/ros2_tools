@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "test.hpp"
 #include "generic_type_support/message.hpp"
 
 #include <yaml-cpp/yaml.h>

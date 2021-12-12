@@ -22,7 +22,7 @@ constexpr auto default_style = "border-width: 1px 1px 1px 1px; border-style: sol
 
 void Simple::Build([[maybe_unused]] MonitorDict & monitors)
 {
-  widget_ = label = new QLabel("test");
+  widget_ = label = new QLabel();
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet(default_style);
 
