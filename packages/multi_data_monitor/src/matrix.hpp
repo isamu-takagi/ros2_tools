@@ -15,7 +15,7 @@
 #ifndef MONITORS__LAYOUT__MATRIX_HPP_
 #define MONITORS__LAYOUT__MATRIX_HPP_
 
-#include "../monitor.hpp"
+#include "monitor.hpp"
 
 class QGridLayout;
 

@@ -15,6 +15,8 @@
 #include "simple.hpp"
 #include <QLabel>
 
+#include <iostream>
+
 namespace monitors
 {
 
@@ -26,30 +28,30 @@ void Simple::Build([[maybe_unused]] MonitorDict & monitors)
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet(default_style);
 
+
   const auto rules = yaml_["rules"];
-  if (rules && rules.size() && rules[0]["func"].as<std::string>() == "switch")
+  if (rules)
   {
-    for (const auto & data : rules[0]["args"])
+    for (const auto & rule : rules)
     {
-      const auto match = data.first.as<std::string>();
-      const auto color = data.second["style"]["back-color"].as<std::string>();
-      style_color_[match] = " background-color: " + color + ";";
+      rules_.emplace_back(rule);
     }
   }
 }
 
 void Simple::Callback(const YAML::Node & message)
 {
-  const auto text = access.Get(message).as<std::string>();
+  const auto data = access.Get(message);
+  const auto text = data.as<std::string>();
   if (prev_ != text)
   {
-    std::string style = default_style;
-    if (style_color_.count(text))
+    FunctionResult result{data, YAML::Node()};  // TODO: fix style
+    for (const auto & rule : rules_)
     {
-      style += style_color_.at(text);
+      result = rule.Apply(data);
     }
-    label->setText(QString::fromStdString(text));
-    label->setStyleSheet(QString::fromStdString(style));
+    label->setText(QString::fromStdString(result.value.as<std::string>()));
+    label->setStyleSheet(QString::fromStdString(default_style + result.style.GetStyleSheet() ));
 
     prev_ = text;
   }

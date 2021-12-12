@@ -156,7 +156,7 @@ YAML::Node parse_message(const void * data, const TypeSupportMessage & message)
 
 YAML::Node GenericMessageSupport::DeserializeYAML(const rclcpp::SerializedMessage & serialized)
 {
-  std::cout << "allocate size: " << introspection_->message_.size_of_ << std::endl;
+  // std::cout << "allocate size: " << introspection_->message_.size_of_ << std::endl;
 
   void * data = static_cast<uint8_t*>(std::malloc(introspection_->message_.size_of_));
   introspection_->message_.init_function(data, rosidl_runtime_cpp::MessageInitialization::SKIP);
@@ -167,7 +167,7 @@ YAML::Node GenericMessageSupport::DeserializeYAML(const rclcpp::SerializedMessag
   introspection_->message_.fini_function(data);
   std::free(data);
 
-  std::cout << "delete message" << std::endl;
+  // std::cout << "delete message" << std::endl;
 
   return yaml;
 }

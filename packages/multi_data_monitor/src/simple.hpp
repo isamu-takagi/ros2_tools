@@ -15,11 +15,13 @@
 #ifndef MONITORS__WIDGET__SIMPLE_HPP_
 #define MONITORS__WIDGET__SIMPLE_HPP_
 
-#include "../monitor.hpp"
+#include "monitor.hpp"
+#include "function.hpp"
 
 // TODO: style class
 #include <map>
 #include <string>
+#include <vector>
 
 class QLabel;
 
@@ -35,8 +37,8 @@ public:
 
 private:
   QLabel * label;
-  std::map<std::string, std::string> style_color_;
   std::string prev_;
+  std::vector<SwitchFunction> rules_;
 };
 
 }  // namespace monitors

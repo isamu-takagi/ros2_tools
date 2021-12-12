@@ -12,33 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MANAGER_HPP_
-#define MANAGER_HPP_
+#ifndef FUNCTION_HPP_
+#define FUNCTION_HPP_
 
-#include "monitor.hpp"
-#include "subscription.hpp"
-#include <rclcpp/rclcpp.hpp>
+#include "style.hpp"
 #include <yaml-cpp/yaml.h>
 
-#include "generic_type_support/generic_type_support.hpp"
-
-namespace monitors
+struct FunctionResult
 {
-
-class Manager
-{
-public:
-  void Load(const std::string & path);
-  void CreateMonitors();
-  void CreateSubscription(const rclcpp::Node::SharedPtr & node);
-  void Build(QWidget * panel);
-
-private:
-  MonitorDict monitors_;
-  std::vector<std::unique_ptr<TopicSubscription>> subscriptions_;
-  YAML::Node yaml_;
+  YAML::Node value;
+  StyleDefinition style;
 };
 
-}  // namespace monitors
+class SwitchFunction
+{
+public:
+  SwitchFunction(const YAML::Node & yaml);
+  FunctionResult Apply(const YAML::Node & value /* TODO: use FunctionResult */) const;
 
-#endif  // MANAGER_HPP_
+private:
+  std::map<std::string, FunctionResult> cases;
+};
+
+#endif  // FUNCTION_HPP_

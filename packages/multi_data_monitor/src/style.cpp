@@ -12,33 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MANAGER_HPP_
-#define MANAGER_HPP_
+#include "style.hpp"
 
-#include "monitor.hpp"
-#include "subscription.hpp"
-#include <rclcpp/rclcpp.hpp>
-#include <yaml-cpp/yaml.h>
+#include <iostream>
 
-#include "generic_type_support/generic_type_support.hpp"
-
-namespace monitors
+StyleDefinition::StyleDefinition()
 {
+  text_size = 0;
+  text_color = "";
+  back_color = "";
+}
 
-class Manager
+StyleDefinition::StyleDefinition(const YAML::Node & yaml)
 {
-public:
-  void Load(const std::string & path);
-  void CreateMonitors();
-  void CreateSubscription(const rclcpp::Node::SharedPtr & node);
-  void Build(QWidget * panel);
+  text_size = 0;
+  text_color = "";
+  back_color = "";
 
-private:
-  MonitorDict monitors_;
-  std::vector<std::unique_ptr<TopicSubscription>> subscriptions_;
-  YAML::Node yaml_;
-};
+  if (yaml["back-color"]) { back_color = yaml["back-color"].as<std::string>(); }
+}
 
-}  // namespace monitors
-
-#endif  // MANAGER_HPP_
+std::string StyleDefinition::GetStyleSheet()
+{
+  return "background-color: " + back_color + ";";
+}

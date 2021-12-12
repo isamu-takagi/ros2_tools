@@ -15,7 +15,7 @@
 #ifndef MONITORS__WIDGET__TITLED_HPP_
 #define MONITORS__WIDGET__TITLED_HPP_
 
-#include "../monitor.hpp"
+#include "monitor.hpp"
 
 class QLabel;
 

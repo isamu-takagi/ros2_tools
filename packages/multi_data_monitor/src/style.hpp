@@ -12,33 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MANAGER_HPP_
-#define MANAGER_HPP_
+#ifndef STYLE_HPP_
+#define STYLE_HPP_
 
-#include "monitor.hpp"
-#include "subscription.hpp"
-#include <rclcpp/rclcpp.hpp>
 #include <yaml-cpp/yaml.h>
+#include <string>
 
-#include "generic_type_support/generic_type_support.hpp"
-
-namespace monitors
-{
-
-class Manager
+class StyleDefinition
 {
 public:
-  void Load(const std::string & path);
-  void CreateMonitors();
-  void CreateSubscription(const rclcpp::Node::SharedPtr & node);
-  void Build(QWidget * panel);
+  StyleDefinition();
+  StyleDefinition(const YAML::Node & yaml);
+  std::string GetStyleSheet();
 
 private:
-  MonitorDict monitors_;
-  std::vector<std::unique_ptr<TopicSubscription>> subscriptions_;
-  YAML::Node yaml_;
+  int text_size;
+  std::string text_color;
+  std::string back_color;
 };
 
-}  // namespace monitors
+class StyleReference
+{
 
-#endif  // MANAGER_HPP_
+};
+
+class StyleVariant
+{
+
+};
+
+class StyleDictionary
+{
+
+};
+
+#endif  // STYLE_HPP_

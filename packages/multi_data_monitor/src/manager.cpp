@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #include "manager.hpp"
-#include "monitors/layout/matrix.hpp"
-#include "monitors/widget/simple.hpp"
-#include "monitors/widget/titled.hpp"
+#include "matrix.hpp"
+#include "simple.hpp"
+#include "titled.hpp"
 #include <QWidget>
 #include <string>
 
