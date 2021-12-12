@@ -26,12 +26,13 @@ void Simple::Build([[maybe_unused]] MonitorDict & monitors)
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet(default_style);
 
-  if (yaml_["color"])
+  const auto rules = yaml_["rules"];
+  if (rules && rules.size() && rules[0]["func"].as<std::string>() == "switch")
   {
-    for (const auto & data : yaml_["color"])
+    for (const auto & data : rules[0]["args"])
     {
-      const auto match = data["match"].as<std::string>();
-      const auto color = data["color"].as<std::string>();
+      const auto match = data.first.as<std::string>();
+      const auto color = data.second["style"]["back-color"].as<std::string>();
       style_color_[match] = " background-color: " + color + ";";
     }
   }

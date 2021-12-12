@@ -20,9 +20,47 @@
 #include <string>
 
 #include <iostream>
+#include <ament_index_cpp/get_package_share_directory.hpp>  // TODO: move parser
 
 namespace monitors
 {
+
+std::pair<std::string, size_t> parse(const std::string & path, size_t & base)
+{
+  const size_t pos1 = path.find('(', base);
+  const size_t pos2 = path.find(')', base);
+  if (pos1 != base + 1 || pos2 == std::string::npos)
+  {
+    return {"$", 1};
+  }
+  const auto expr = path.substr(base + 2, pos2 - base - 2);
+  if (expr.substr(0, 5) != "find ")
+  {
+    return {"$", 1};
+  }
+  return {ament_index_cpp::get_package_share_directory(expr.substr(5)), pos2 - base + 1};
+}
+
+void Manager::Load(const std::string & path)
+{
+  std::string parsed;
+  size_t base = 0;
+  while (true)
+  {
+    const size_t pos = path.find('$', base);
+    parsed += path.substr(base, pos - base);
+    if (pos == std::string::npos)
+    {
+      break;
+    }
+    const auto [str, len] = parse(path, base);
+    parsed += str;
+    base = pos + len;
+  }
+
+  yaml_ = YAML::LoadFile(parsed);
+  std::cout << "format version: " << yaml_["version"].as<std::string>() << std::endl;
+}
 
 void Manager::CreateMonitors()
 {
@@ -97,14 +135,8 @@ void Manager::Build(QWidget * panel)
   std::cout << "layout: " << layout << std::endl;
   if (layout)
   {
-  panel->setLayout(layout);
+    panel->setLayout(layout);
   }
-}
-
-void Manager::Load(const std::string & path)
-{
-  yaml_ = YAML::LoadFile(path);
-  std::cout << "format version: " << yaml_["version"].as<std::string>() << std::endl;
 }
 
 }  // namespace monitors

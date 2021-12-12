@@ -24,7 +24,7 @@ monitors:
     class: titled
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
     field: {name: stamp.sec, type: auto}
-    title: "Second: "
+    title: Second
 
   data_name_2:
     class: titled
@@ -49,6 +49,8 @@ monitors:
     topic: {name: /monitor/int, type: std_msgs/msg/Int32}
     field: {name: data, type: auto}
     title: Int Value
-    color:
-      - {match: 1, color: "#FF0000"}
-      - {match: 2, color: "#00FF00"}
+    rules:
+      - func: switch
+        args:
+          1: {value: A, style: {back-color: "#FF0000"}}
+          2: {value: B, style: {back-color: "#00FF00"}}
