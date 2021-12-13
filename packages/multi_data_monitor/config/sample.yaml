@@ -42,13 +42,13 @@ monitors:
     class: simple
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
     field: {name: frame_id, type: auto}
-    title: Frame ID
+    title: Frame
 
   data_name_5:
     class: simple
     topic: {name: /monitor/int, type: std_msgs/msg/Int32}
     field: {name: data, type: auto}
-    title: Int Value
+    title: Value
     rules:
       - func: switch
         args:

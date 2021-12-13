@@ -28,7 +28,6 @@ void Simple::Build([[maybe_unused]] MonitorDict & monitors)
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet(default_style);
 
-
   const auto rules = yaml_["rules"];
   if (rules)
   {
