@@ -34,11 +34,11 @@ std::pair<std::string, size_t> parse(const std::string & path, size_t & base)
     return {"$", 1};
   }
   const auto expr = path.substr(base + 2, pos2 - base - 2);
-  if (expr.substr(0, 5) != "find ")
+  if (expr.substr(0, 15) != "find-pkg-share ")
   {
     return {"$", 1};
   }
-  return {ament_index_cpp::get_package_share_directory(expr.substr(5)), pos2 - base + 1};
+  return {ament_index_cpp::get_package_share_directory(expr.substr(15)), pos2 - base + 1};
 }
 
 void Manager::Load(const std::string & path)
