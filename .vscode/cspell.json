@@ -6,6 +6,7 @@
         "rclcpp",
         "schematypens",
         "buildtool",
+        "typesupport",
         // ===== cmake =====
         "cmake",
         "endforeach",
