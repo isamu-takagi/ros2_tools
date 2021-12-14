@@ -37,8 +37,8 @@ public:
 
 private:
   QLabel * label;
+  FunctionRules rules_;
   std::string prev_;
-  std::vector<SwitchFunction> rules_;
 };
 
 }  // namespace monitors

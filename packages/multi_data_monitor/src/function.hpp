@@ -18,17 +18,37 @@
 #include "style.hpp"
 #include <yaml-cpp/yaml.h>
 
-struct FunctionResult
+struct FunctionResult final
 {
   YAML::Node value;
   StyleDefinition style;
 };
 
-class SwitchFunction
+class BaseFunction
+{
+public:
+  virtual ~BaseFunction() = default;
+  virtual FunctionResult Apply(const FunctionResult & base) const = 0;
+
+protected:
+  static FunctionResult Apply(const FunctionResult & base, const FunctionResult & input);
+};
+
+class FunctionRules final
+{
+public:
+  void Load(const YAML::Node & yaml);
+  FunctionResult Apply(const FunctionResult & base) const;
+
+private:
+  std::vector<std::unique_ptr<BaseFunction>> functions_;
+};
+
+class SwitchFunction : public BaseFunction
 {
 public:
   SwitchFunction(const YAML::Node & yaml);
-  FunctionResult Apply(const YAML::Node & value /* TODO: use FunctionResult */) const;
+  FunctionResult Apply(const FunctionResult & base) const override;
 
 private:
   std::map<std::string, FunctionResult> cases;

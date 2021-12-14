@@ -17,6 +17,43 @@
 
 #include <iostream>
 
+std::unique_ptr<BaseFunction> CreateFunction(const YAML::Node & rule)
+{
+  const auto func = rule["func"].as<std::string>();
+  if (func == "switch")
+  {
+    return std::make_unique<SwitchFunction>(rule);
+  }
+  std::cout << "unknown function" << std::endl;
+  return nullptr;
+}
+
+void FunctionRules::Load(const YAML::Node & rules)
+{
+  // TODO: check reload
+  if (!rules) { return; }
+
+  for (const auto & rule : rules)
+  {
+    functions_.push_back(CreateFunction(rule));
+  }
+}
+
+FunctionResult FunctionRules::Apply(const FunctionResult & base) const
+{
+  FunctionResult result = base;
+  for (const auto & function : functions_)
+  {
+    result = function->Apply(result);
+  }
+  return result;
+}
+
+FunctionResult BaseFunction::Apply(const FunctionResult & base, const FunctionResult & input)
+{
+  return FunctionResult{input.value ? input.value : base.value, base.style.Merge(input.style)};
+}
+
 SwitchFunction::SwitchFunction(const YAML::Node & yaml)
 {
   for (const auto & node : yaml["args"])
@@ -26,17 +63,12 @@ SwitchFunction::SwitchFunction(const YAML::Node & yaml)
   }
 }
 
-FunctionResult SwitchFunction::Apply(const YAML::Node & value) const
+FunctionResult SwitchFunction::Apply(const FunctionResult & base) const
 {
-  const auto iter = cases.find(value.as<std::string>());
+  const auto iter = cases.find(base.value.as<std::string>());
   if (iter == cases.end())
   {
-    return FunctionResult{value, YAML::Node()};
+    return base;
   }
-
-  if (!iter->second.value.IsDefined())
-  {
-    return FunctionResult{value, iter->second.style};
-  }
-  return iter->second;
+  return BaseFunction::Apply(base, iter->second);
 }

@@ -29,10 +29,47 @@ StyleDefinition::StyleDefinition(const YAML::Node & yaml)
   text_color = "";
   back_color = "";
 
+  if (!yaml) { return; }
+
+  if (yaml["text-size"])  { text_size  = yaml["text-size"].as<int>(); }
+  if (yaml["text-color"]) { text_color = yaml["text-color"].as<std::string>(); }
   if (yaml["back-color"]) { back_color = yaml["back-color"].as<std::string>(); }
 }
 
-std::string StyleDefinition::GetStyleSheet()
+std::string StyleDefinition::GetStyleSheet() const
 {
-  return "background-color: " + back_color + ";";
+  std::string style_sheet;
+
+  if (text_size != 0)
+  {
+    style_sheet += "font-size: " + std::to_string(text_size) + ";";
+  }
+  if (text_color != "")
+  {
+    style_sheet += "color: " + text_color + ";";
+  }
+  if (back_color != "")
+  {
+    style_sheet += "background-color: " + back_color + ";";
+  }
+  return style_sheet;
+}
+
+StyleDefinition StyleDefinition::Merge(const StyleDefinition & input) const
+{
+  StyleDefinition style = *this;
+
+  if (input.text_size != 0)
+  {
+    style.text_size = input.text_size;
+  }
+  if (input.text_color != "")
+  {
+    style.text_color = input.text_color;
+  }
+  if (input.back_color != "")
+  {
+    style.back_color = input.back_color;
+  }
+  return style;
 }

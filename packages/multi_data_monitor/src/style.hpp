@@ -23,7 +23,8 @@ class StyleDefinition
 public:
   StyleDefinition();
   StyleDefinition(const YAML::Node & yaml);
-  std::string GetStyleSheet();
+  std::string GetStyleSheet() const;
+  StyleDefinition Merge(const StyleDefinition & input) const;
 
 private:
   int text_size;
