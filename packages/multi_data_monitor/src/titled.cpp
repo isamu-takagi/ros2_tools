@@ -36,11 +36,18 @@ void Titled::Build([[maybe_unused]] MonitorDict & monitors)
   layout_->addWidget(value);
   layout_->addWidget(title);
   layout_->setSpacing(0);
+
+  rules_.Load(yaml_["rules"]);
 }
 
 void Titled::Callback(const YAML::Node & message)
 {
-  const auto text = access.Get(message).as<std::string>();
+
+  const auto data = access.Get(message);
+  StyleDefinition default_style;  // TODO: implement default style
+  FunctionResult result = rules_.Apply({data, default_style});
+
+  const auto text = result.value.as<std::string>();
   value->setText(QString::fromStdString(text));
 }
 

@@ -16,6 +16,7 @@
 #define MONITORS__WIDGET__TITLED_HPP_
 
 #include "monitor.hpp"
+#include "function.hpp"
 
 class QLabel;
 
@@ -32,6 +33,7 @@ public:
 private:
   QLabel * value;
   QLabel * title;
+  FunctionRules rules_;  // TODO: move base class
 };
 
 }  // namespace monitors

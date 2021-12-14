@@ -37,7 +37,7 @@ public:
 
 private:
   QLabel * label;
-  FunctionRules rules_;
+  FunctionRules rules_;  // TODO: move base class
   std::string prev_;
 };
 

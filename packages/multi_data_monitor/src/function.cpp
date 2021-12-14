@@ -15,6 +15,8 @@
 #include "function.hpp"
 #include "style.hpp"
 
+#include <sstream>
+#include <iomanip>
 #include <iostream>
 
 std::unique_ptr<BaseFunction> CreateFunction(const YAML::Node & rule)
@@ -23,6 +25,10 @@ std::unique_ptr<BaseFunction> CreateFunction(const YAML::Node & rule)
   if (func == "switch")
   {
     return std::make_unique<SwitchFunction>(rule);
+  }
+  if (func == "precision")
+  {
+    return std::make_unique<PrecisionFunction>(rule);
   }
   std::cout << "unknown function" << std::endl;
   return nullptr;
@@ -59,16 +65,28 @@ SwitchFunction::SwitchFunction(const YAML::Node & yaml)
   for (const auto & node : yaml["args"])
   {
     const auto key = node.first.as<std::string>();
-    cases.insert(std::make_pair(key, FunctionResult{node.second["value"], node.second["style"]}));
+    cases_.insert(std::make_pair(key, FunctionResult{node.second["value"], node.second["style"]}));
   }
 }
 
 FunctionResult SwitchFunction::Apply(const FunctionResult & base) const
 {
-  const auto iter = cases.find(base.value.as<std::string>());
-  if (iter == cases.end())
+  const auto iter = cases_.find(base.value.as<std::string>());
+  if (iter == cases_.end())
   {
     return base;
   }
   return BaseFunction::Apply(base, iter->second);
+}
+
+PrecisionFunction::PrecisionFunction(const YAML::Node & yaml)
+{
+  precision_ = yaml["args"].as<int>();
+}
+
+FunctionResult PrecisionFunction::Apply(const FunctionResult & base) const
+{
+  std::stringstream ss;
+  ss << std::fixed << std::setprecision(precision_) << base.value.as<double>();
+  return FunctionResult{YAML::Node(ss.str()), base.style};
 }

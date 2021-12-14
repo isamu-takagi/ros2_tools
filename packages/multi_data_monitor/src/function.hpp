@@ -51,7 +51,17 @@ public:
   FunctionResult Apply(const FunctionResult & base) const override;
 
 private:
-  std::map<std::string, FunctionResult> cases;
+  std::map<std::string, FunctionResult> cases_;
+};
+
+class PrecisionFunction : public BaseFunction
+{
+public:
+  PrecisionFunction(const YAML::Node & yaml);
+  FunctionResult Apply(const FunctionResult & base) const override;
+
+private:
+  int precision_;
 };
 
 #endif  // FUNCTION_HPP_

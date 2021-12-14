@@ -37,6 +37,8 @@ monitors:
     topic: {name: /monitor/float, type: std_msgs/msg/Float32}
     field: {name: data, type: auto}
     title: Float Value
+    rules:
+      - {func: precision, args: 3}
 
   data_name_4:
     class: simple
