@@ -64,4 +64,14 @@ private:
   int precision_;
 };
 
+class UnitsFunction : public BaseFunction
+{
+public:
+  UnitsFunction(const YAML::Node & yaml);
+  FunctionResult Apply(const FunctionResult & base) const override;
+
+private:
+  double coefficient_;
+};
+
 #endif  // FUNCTION_HPP_

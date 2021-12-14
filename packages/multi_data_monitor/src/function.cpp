@@ -15,9 +15,16 @@
 #include "function.hpp"
 #include "style.hpp"
 
+// precision
 #include <sstream>
 #include <iomanip>
+
+// units
+#include <cmath>
+
+// debug
 #include <iostream>
+
 
 std::unique_ptr<BaseFunction> CreateFunction(const YAML::Node & rule)
 {
@@ -29,6 +36,10 @@ std::unique_ptr<BaseFunction> CreateFunction(const YAML::Node & rule)
   if (func == "precision")
   {
     return std::make_unique<PrecisionFunction>(rule);
+  }
+  if (func == "units")
+  {
+    return std::make_unique<UnitsFunction>(rule);
   }
   std::cout << "unknown function" << std::endl;
   return nullptr;
@@ -89,4 +100,23 @@ FunctionResult PrecisionFunction::Apply(const FunctionResult & base) const
   std::stringstream ss;
   ss << std::fixed << std::setprecision(precision_) << base.value.as<double>();
   return FunctionResult{YAML::Node(ss.str()), base.style};
+}
+
+UnitsFunction::UnitsFunction(const YAML::Node & yaml)
+{
+  const auto type = yaml["args"].as<std::string>();
+
+  if (type == "mps_to_kph") { coefficient_ = 1.0 * 3.6; return; }
+  if (type == "kph_to_mps") { coefficient_ = 1.0 / 3.6; return; }
+  if (type == "deg_to_rad") { coefficient_ = M_PI / 180.0; return; }
+  if (type == "rad_to_deg") { coefficient_ = 180.0 / M_PI; return; }
+  std::cout << "unknown units" << std::endl;
+
+  coefficient_ = 1.0;
+}
+
+FunctionResult UnitsFunction::Apply(const FunctionResult & base) const
+{
+  double value = coefficient_ * base.value.as<double>();
+  return FunctionResult{YAML::Node(value), base.style};
 }

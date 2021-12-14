@@ -38,7 +38,8 @@ monitors:
     field: {name: data, type: auto}
     title: Float Value
     rules:
-      - {func: precision, args: 3}
+      - {func: units, args: mps_to_kph}
+      - {func: precision, args: 2}
 
   data_name_4:
     class: simple
