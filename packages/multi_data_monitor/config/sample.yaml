@@ -5,6 +5,19 @@ version: alpha 1
 root: main
 
 # --------------------------------------------------
+# defaults
+# --------------------------------------------------
+defaults:
+
+  - class: simple
+    style: {font-size: 12}
+
+  - class: titled
+    style:
+      title: {font-size: 12}
+      value: {font-size: 24}
+
+# --------------------------------------------------
 # monitors
 # --------------------------------------------------
 monitors:
@@ -31,6 +44,9 @@ monitors:
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
     field: {name: stamp.nanosec}
     title: Nanosecond
+    style:
+      title: {font-size: 12}
+      value: {font-size: 12}
 
   data_name_3:
     class: titled
@@ -45,6 +61,7 @@ monitors:
     class: simple
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
     field: {name: frame_id}
+    style: {font-size: 24}
 
   data_name_5:
     class: simple

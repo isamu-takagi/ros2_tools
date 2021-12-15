@@ -27,8 +27,8 @@ public:
   StyleDefinition Merge(const StyleDefinition & input) const;
 
 private:
-  int text_size;
-  std::string text_color;
+  int font_size;
+  std::string font_color;
   std::string back_color;
 };
 

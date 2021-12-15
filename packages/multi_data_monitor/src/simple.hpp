@@ -37,9 +37,12 @@ public:
 
 private:
   QLabel * label;
-  FunctionRules rules_;  // TODO: move base class
+  FunctionRules rules_;    // TODO: move base class
+  StyleDefinition style_;  // TODO: move base class
   std::string prev_;
   std::string title_;
+public:
+  static StyleDefinition default_style_;  // TODO: private and setter
 };
 
 }  // namespace monitors

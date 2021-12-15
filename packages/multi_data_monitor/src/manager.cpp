@@ -86,7 +86,23 @@ void Manager::CreateMonitors()
     return nullptr;
   };
 
-  for(const auto & monitor : yaml_["monitors"])
+  for (const auto & monitor : yaml_["defaults"])
+  {
+    const auto type = monitor["class"].as<std::string>();
+    std::cout << "set default: " << type << std::endl;
+
+    if (type == "titled")
+    {
+      Titled::default_style_title_ = StyleDefinition(monitor["style"]["title"]);
+      Titled::default_style_value_ = StyleDefinition(monitor["style"]["value"]);
+    }
+    if (type == "simple")
+    {
+      Simple::default_style_ = StyleDefinition(monitor["style"]);
+    }
+  }
+
+  for (const auto & monitor : yaml_["monitors"])
   {
     const auto name = monitor.first.as<std::string>();
     monitors_[name] = CreateMonitor(name, monitor.second);

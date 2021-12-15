@@ -34,6 +34,11 @@ private:
   QLabel * value;
   QLabel * title;
   FunctionRules rules_;  // TODO: move base class
+  StyleDefinition style_value_;  // TODO: move base class
+  StyleDefinition style_title_;  // TODO: move base class
+public:
+  static StyleDefinition default_style_value_;  // TODO: private and setter
+  static StyleDefinition default_style_title_;  // TODO: private and setter
 };
 
 }  // namespace monitors

@@ -20,17 +20,21 @@
 namespace monitors
 {
 
-constexpr auto default_style_sheet = "border-width: 1px 1px 1px 1px; border-style: solid; font-size: 14px;";
+constexpr auto kStyleSheet = "border-width: 1px 1px 1px 1px; border-style: solid;";
+
+StyleDefinition Simple::default_style_;
 
 void Simple::Build([[maybe_unused]] MonitorDict & monitors)
 {
   title_ = yaml_["title"].as<std::string>("");
 
+  rules_.Load(yaml_["rules"]);
+  style_ = default_style_.Merge(StyleDefinition(yaml_["style"]));
+
   widget_ = label = new QLabel(QString::fromStdString(title_));
   label->setAlignment(Qt::AlignCenter);
-  label->setStyleSheet(default_style_sheet);
-
-  rules_.Load(yaml_["rules"]);
+  label->setStyleSheet(QString::fromStdString(kStyleSheet + style_.GetStyleSheet()));
+  // setToolTip();
 }
 
 void Simple::Callback(const YAML::Node & message)
@@ -39,11 +43,12 @@ void Simple::Callback(const YAML::Node & message)
   const auto text = data.as<std::string>();
   if (prev_ != text)
   {
-    StyleDefinition default_style;  // TODO: implement default style
-    FunctionResult result = rules_.Apply({data, default_style});
+    std::cout << style_.GetStyleSheet() << std::endl;
+    FunctionResult result = rules_.Apply(FunctionResult{data, style_});
+    std::cout << result.style.GetStyleSheet() << std::endl;
 
     label->setText(QString::fromStdString(title_ + result.value.as<std::string>()));
-    label->setStyleSheet(QString::fromStdString(default_style_sheet + result.style.GetStyleSheet() ));
+    label->setStyleSheet(QString::fromStdString(kStyleSheet + result.style.GetStyleSheet()));  // TODO: workload reduction
 
     prev_ = text;
   }

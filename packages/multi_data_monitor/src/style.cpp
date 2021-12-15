@@ -18,35 +18,30 @@
 
 StyleDefinition::StyleDefinition()
 {
-  text_size = 0;
-  text_color = "";
+  font_size = 0;
+  font_color = "";
   back_color = "";
 }
 
-StyleDefinition::StyleDefinition(const YAML::Node & yaml)
+StyleDefinition::StyleDefinition(const YAML::Node & yaml) : StyleDefinition()
 {
-  text_size = 0;
-  text_color = "";
-  back_color = "";
-
   if (!yaml) { return; }
-
-  if (yaml["text-size"])  { text_size  = yaml["text-size"].as<int>(); }
-  if (yaml["text-color"]) { text_color = yaml["text-color"].as<std::string>(); }
-  if (yaml["back-color"]) { back_color = yaml["back-color"].as<std::string>(); }
+  font_size = yaml["font-size"].as<int>(0);
+  font_color = yaml["font-color"].as<std::string>("");
+  back_color = yaml["back-color"].as<std::string>("");
 }
 
 std::string StyleDefinition::GetStyleSheet() const
 {
   std::string style_sheet;
 
-  if (text_size != 0)
+  if (font_size != 0)
   {
-    style_sheet += "font-size: " + std::to_string(text_size) + ";";
+    style_sheet += "font-size: " + std::to_string(font_size) + "px;";
   }
-  if (text_color != "")
+  if (font_color != "")
   {
-    style_sheet += "color: " + text_color + ";";
+    style_sheet += "color: " + font_color + ";";
   }
   if (back_color != "")
   {
@@ -59,13 +54,13 @@ StyleDefinition StyleDefinition::Merge(const StyleDefinition & input) const
 {
   StyleDefinition style = *this;
 
-  if (input.text_size != 0)
+  if (input.font_size != 0)
   {
-    style.text_size = input.text_size;
+    style.font_size = input.font_size;
   }
-  if (input.text_color != "")
+  if (input.font_color != "")
   {
-    style.text_color = input.text_color;
+    style.font_color = input.font_color;
   }
   if (input.back_color != "")
   {
