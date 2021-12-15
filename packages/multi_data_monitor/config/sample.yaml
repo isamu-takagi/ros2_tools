@@ -54,7 +54,8 @@ monitors:
     title: Value
     rules:
       - func: switch
-        args:
+        default: {value: ERROR}
+        mapping:
           1: {value: A, style: {back-color: "#FF00FF"}}
           2: {value: B, style: {back-color: "#00FF00"}}
           3: {value: C, style: {back-color: "#00FFFF"}}

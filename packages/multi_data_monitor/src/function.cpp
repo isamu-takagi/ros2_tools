@@ -73,19 +73,23 @@ FunctionResult BaseFunction::Apply(const FunctionResult & base, const FunctionRe
 
 SwitchFunction::SwitchFunction(const YAML::Node & yaml)
 {
-  for (const auto & node : yaml["args"])
+  for (const auto & node : yaml["mapping"])
   {
     const auto key = node.first.as<std::string>();
-    cases_.insert(std::make_pair(key, FunctionResult{node.second["value"], node.second["style"]}));
+    mapping_.insert(std::make_pair(key, FunctionResult{node.second["value"], node.second["style"]}));
+  }
+  if (yaml["default"])
+  {
+    default_ = FunctionResult{yaml["default"]["value"], yaml["default"]["style"]};
   }
 }
 
 FunctionResult SwitchFunction::Apply(const FunctionResult & base) const
 {
-  const auto iter = cases_.find(base.value.as<std::string>());
-  if (iter == cases_.end())
+  const auto iter = mapping_.find(base.value.as<std::string>());
+  if (iter == mapping_.end())
   {
-    return base;
+    return default_.value_or(base);
   }
   return BaseFunction::Apply(base, iter->second);
 }

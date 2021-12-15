@@ -18,6 +18,8 @@
 #include "style.hpp"
 #include <yaml-cpp/yaml.h>
 
+#include <optional>  // switch function
+
 struct FunctionResult final
 {
   YAML::Node value;
@@ -51,7 +53,8 @@ public:
   FunctionResult Apply(const FunctionResult & base) const override;
 
 private:
-  std::map<std::string, FunctionResult> cases_;
+  std::map<std::string, FunctionResult> mapping_;
+  std::optional<FunctionResult> default_;
 };
 
 class PrecisionFunction : public BaseFunction
