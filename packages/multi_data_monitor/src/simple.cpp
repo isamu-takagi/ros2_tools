@@ -33,7 +33,7 @@ void Simple::Build([[maybe_unused]] MonitorDict & monitors)
 
 void Simple::Callback(const YAML::Node & message)
 {
-  const auto data = access.Get(message);
+  const auto data = YAML::Clone(access.Get(message));
   const auto text = data.as<std::string>();
   if (prev_ != text)
   {
