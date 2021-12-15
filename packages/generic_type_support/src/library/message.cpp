@@ -95,11 +95,11 @@ YAML::Node parse_primitive(const void * data, const TypeSupportField & field)
     case ROS_TYPE_BOOLEAN:
       return YAML::Node(*reinterpret_cast<const bool*>(data));
     case ROS_TYPE_OCTET:
-      return YAML::Node(*reinterpret_cast<const uint8_t*>(data));
+      return YAML::Node(static_cast<uint32_t>(*reinterpret_cast<const uint8_t*>(data)));
     case ROS_TYPE_UINT8:
-      return YAML::Node(*reinterpret_cast<const uint8_t*>(data));
+      return YAML::Node(static_cast<uint32_t>(*reinterpret_cast<const uint8_t*>(data)));
     case ROS_TYPE_INT8:
-      return YAML::Node(*reinterpret_cast<const int8_t*>(data));
+      return YAML::Node(static_cast<int32_t>(*reinterpret_cast<const int8_t*>(data)));
     case ROS_TYPE_UINT16:
       return YAML::Node(*reinterpret_cast<const uint16_t*>(data));
     case ROS_TYPE_INT16:
