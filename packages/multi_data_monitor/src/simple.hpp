@@ -39,6 +39,7 @@ private:
   QLabel * label;
   FunctionRules rules_;  // TODO: move base class
   std::string prev_;
+  std::string title_;
 };
 
 }  // namespace monitors

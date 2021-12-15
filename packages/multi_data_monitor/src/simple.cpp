@@ -24,7 +24,9 @@ constexpr auto default_style_sheet = "border-width: 1px 1px 1px 1px; border-styl
 
 void Simple::Build([[maybe_unused]] MonitorDict & monitors)
 {
-  widget_ = label = new QLabel();
+  title_ = yaml_["title"].as<std::string>("");
+
+  widget_ = label = new QLabel(QString::fromStdString(title_));
   label->setAlignment(Qt::AlignCenter);
   label->setStyleSheet(default_style_sheet);
 
@@ -40,7 +42,7 @@ void Simple::Callback(const YAML::Node & message)
     StyleDefinition default_style;  // TODO: implement default style
     FunctionResult result = rules_.Apply({data, default_style});
 
-    label->setText(QString::fromStdString(result.value.as<std::string>()));
+    label->setText(QString::fromStdString(title_ + result.value.as<std::string>()));
     label->setStyleSheet(QString::fromStdString(default_style_sheet + result.style.GetStyleSheet() ));
 
     prev_ = text;

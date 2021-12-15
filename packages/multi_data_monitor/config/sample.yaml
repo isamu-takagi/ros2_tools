@@ -23,19 +23,19 @@ monitors:
   data_name_1:
     class: titled
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
-    field: {name: stamp.sec, type: auto}
+    field: {name: stamp.sec}
     title: Second
 
   data_name_2:
     class: titled
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
-    field: {name: stamp.nanosec, type: auto}
+    field: {name: stamp.nanosec}
     title: Nanosecond
 
   data_name_3:
     class: titled
     topic: {name: /monitor/float, type: std_msgs/msg/Float32}
-    field: {name: data, type: auto}
+    field: {name: data}
     title: Float Value
     rules:
       - {func: units, args: mps_to_kph}
@@ -44,14 +44,13 @@ monitors:
   data_name_4:
     class: simple
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
-    field: {name: frame_id, type: auto}
-    title: Frame
+    field: {name: frame_id}
 
   data_name_5:
     class: simple
     topic: {name: /monitor/int, type: std_msgs/msg/Int32}
-    field: {name: data, type: auto}
-    title: Value
+    field: {name: data}
+    title: "Value: "
     rules:
       - func: switch
         default: {value: ERROR}
