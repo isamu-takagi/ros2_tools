@@ -21,60 +21,77 @@
 #include <rclcpp/typesupport_helpers.hpp>
 #include <rosidl_typesupport_introspection_cpp/message_introspection.hpp>
 #include <rosidl_typesupport_introspection_cpp/service_introspection.hpp>
+#include <string>
 #include <vector>
 
 namespace generic_type_support
 {
 
-class IntrospectionMessage;
-class IntrospectionField;
-class IntrospectionService;
+class TypeSupportMessage;
+class TypeSupportService;
+class TypeSupportSerialization;
 
-using TypeSupportLibrary = std::shared_ptr<rcpputils::SharedLibrary>;
+class TypeSupportClass;
+class TypeSupportField;
 using TypeSupportHandle = rosidl_message_type_support_t;
-using TypeSupportMessage = rosidl_typesupport_introspection_cpp::MessageMembers;
-using TypeSupportField = rosidl_typesupport_introspection_cpp::MessageMember;
-using TypeSupportService = rosidl_typesupport_introspection_cpp::ServiceMembers;
+using IntrospectionMessage = rosidl_typesupport_introspection_cpp::MessageMembers;
+using IntrospectionField = rosidl_typesupport_introspection_cpp::MessageMember;
+using IntrospectionService = rosidl_typesupport_introspection_cpp::ServiceMembers;
 
+// Do not create this class directly.
+struct TypeSupportLibrary
+{
+  static TypeSupportLibrary LoadTypeSupport(const std::string & type);
+  static TypeSupportLibrary LoadIntrospection(const std::string & type);
 
-class IntrospectionMessage
+  const rosidl_message_type_support_t * handle;
+  const std::shared_ptr<rcpputils::SharedLibrary> library;
+};
+
+// Do not create this class directly.
+class TypeSupportField
 {
 public:
-  static std::shared_ptr<IntrospectionMessage> Load(const std::string & type);
-  IntrospectionMessage(const TypeSupportLibrary & library, const TypeSupportHandle * handle);
-
+  TypeSupportField(const IntrospectionField & field);
   void Dump() const;
 
+private:
+  const IntrospectionField & field_;
+};
+
+// Do not create this class directly.
+class TypeSupportClass
+{
+public:
+  TypeSupportClass(const IntrospectionMessage & message);
+  void Dump() const;
   const auto begin() const { return fields_.begin(); }
   const auto end() const { return fields_.end(); }
 
-//private:
+private:
+  const IntrospectionMessage & message_;
+  std::vector<TypeSupportField> fields_;
+};
+
+// This is the interface class.
+class TypeSupportMessage
+{
+public:
+  static TypeSupportMessage Load(const std::string & type);
+  TypeSupportMessage(const TypeSupportLibrary & library);
+  TypeSupportClass GetClass() const;
+  bool HasField();
+
+private:
   const TypeSupportLibrary library_;
-  const TypeSupportMessage message_;
-  std::vector<IntrospectionField> fields_;
 };
 
-class IntrospectionField
+// This is the interface class.
+class TypeSupportSerialization : public rclcpp::SerializationBase
 {
 public:
-  IntrospectionField(const TypeSupportField & field);
-
-  void Dump() const;
-
-//private:
-  const TypeSupportField field_;
-};
-
-class IntrospectionService
-{
-  // not implemented
-};
-
-class MessageSerialization : public rclcpp::SerializationBase
-{
-public:
-  static std::shared_ptr<MessageSerialization> Load(const std::string & type);
-  MessageSerialization(const TypeSupportLibrary & library, const TypeSupportHandle * handle);
+  static TypeSupportSerialization Load(const std::string & type);
+  TypeSupportSerialization(const TypeSupportLibrary & library);
 
 private:
   const TypeSupportLibrary library_;

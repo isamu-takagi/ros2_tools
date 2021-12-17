@@ -13,21 +13,22 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-ament_auto_add_executable(${PROJECT_NAME}_node
-  src/library/typesupport.cpp
-  #src/library/debug.cpp
-  src/library/message.cpp
-  src/samples/test.cpp
+ament_auto_add_library(${PROJECT_NAME} SHARED
+  src/typesupport.cpp
+  src/message.cpp
 )
 
-ament_auto_add_library(${PROJECT_NAME} SHARED
-  src/library/typesupport.cpp
-  src/library/message.cpp
+ament_auto_add_executable(debug
+  src/debug.cpp
 )
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
+  ament_add_gtest(${PROJECT_NAME}_test test/test.cpp)
+  ament_target_dependencies(${PROJECT_NAME}_test rclcpp)
+  target_include_directories(${PROJECT_NAME}_test PRIVATE include)
+  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
 endif()
 
 ament_auto_package()

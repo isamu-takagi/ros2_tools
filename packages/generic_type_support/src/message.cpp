@@ -23,6 +23,7 @@
 namespace generic_type_support
 {
 
+#if 0
 std::vector<std::string> split(const std::string & input)
 {
   std::vector<std::string> result;
@@ -171,5 +172,6 @@ YAML::Node GenericMessageSupport::DeserializeYAML(const rclcpp::SerializedMessag
 
   return yaml;
 }
+#endif
 
 }  // namespace generic_type_support

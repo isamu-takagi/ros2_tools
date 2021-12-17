@@ -21,23 +21,30 @@
 namespace generic_type_support
 {
 
-std::shared_ptr<IntrospectionMessage> IntrospectionMessage::Load(const std::string & type)
+TypeSupportLibrary TypeSupportLibrary::LoadTypeSupport(const std::string & type)
+{
+  constexpr auto identifier = "rosidl_typesupport_cpp";
+  const auto library = rclcpp::get_typesupport_library(type, identifier);
+  const auto handle = rclcpp::get_typesupport_handle(type, identifier, *library);
+  return TypeSupportLibrary{handle, library};
+}
+
+TypeSupportLibrary TypeSupportLibrary::LoadIntrospection(const std::string & type)
 {
   constexpr auto identifier = "rosidl_typesupport_introspection_cpp";
   const auto library = rclcpp::get_typesupport_library(type, identifier);
   const auto handle = rclcpp::get_typesupport_handle(type, identifier, *library);
-  return std::make_shared<IntrospectionMessage>(library, handle);
+  return TypeSupportLibrary{handle, library};
 }
 
-IntrospectionMessage::IntrospectionMessage(const TypeSupportLibrary & library, const TypeSupportHandle * handle)
-: library_(library), message_(*reinterpret_cast<const TypeSupportMessage *>(handle->data))
+TypeSupportClass::TypeSupportClass(const IntrospectionMessage & message) : message_(message)
 {
   for (uint32_t i = 0; i < message_.member_count_; ++i) {
     fields_.emplace_back(message_.members_[i]);
   }
 }
 
-void IntrospectionMessage::Dump() const
+void TypeSupportClass::Dump() const
 {
   std::cout << "namespace     : " << message_.message_namespace_ << std::endl;
   std::cout << "name          : " << message_.message_name_ << std::endl;
@@ -48,12 +55,11 @@ void IntrospectionMessage::Dump() const
   std::cout << "fini_function : " << reinterpret_cast<void *>(message_.fini_function) << std::endl;
 }
 
-IntrospectionField::IntrospectionField(const TypeSupportField & field)
-: field_(field)
+TypeSupportField::TypeSupportField(const IntrospectionField & field) : field_(field)
 {
 }
 
-void IntrospectionField::Dump() const
+void TypeSupportField::Dump() const
 {
   std::cout << "name               : " << field_.name_ << std::endl;
   std::cout << "type_id            : " << static_cast<uint32_t>(field_.type_id_) << std::endl;
@@ -70,18 +76,28 @@ void IntrospectionField::Dump() const
   std::cout << "resize_function    : " << field_.resize_function << std::endl;
 }
 
-std::shared_ptr<MessageSerialization> MessageSerialization::Load(const std::string & type)
+TypeSupportMessage TypeSupportMessage::Load(const std::string & type)
 {
-  constexpr auto identifier = "rosidl_typesupport_cpp";
-  const auto library = rclcpp::get_typesupport_library(type, identifier);
-  const auto handle = rclcpp::get_typesupport_handle(type, identifier, *library);
-  return std::make_shared<MessageSerialization>(library, handle);
+  return TypeSupportLibrary(TypeSupportLibrary::LoadIntrospection(type));
 }
 
-MessageSerialization::MessageSerialization(const TypeSupportLibrary & library, const TypeSupportHandle * handle)
-: SerializationBase(handle), library_(library)
+TypeSupportMessage::TypeSupportMessage(const TypeSupportLibrary & library) : library_(library)
 {
 }
 
+TypeSupportClass TypeSupportMessage::GetClass() const
+{
+  return TypeSupportClass(*reinterpret_cast<const IntrospectionMessage *>(library_.handle->data));
+}
+
+TypeSupportSerialization TypeSupportSerialization::Load(const std::string & type)
+{
+  return TypeSupportLibrary(TypeSupportLibrary::LoadIntrospection(type));
+}
+
+TypeSupportSerialization::TypeSupportSerialization(const TypeSupportLibrary & library)
+: SerializationBase(library.handle), library_(library)
+{
+}
 
 }  // namespace generic_type_support

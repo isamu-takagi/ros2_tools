@@ -24,6 +24,7 @@
 namespace generic_type_support
 {
 
+/*
 struct GenericTypeAccessField
 {
   enum class Type {DATA, LIST, DICT};
@@ -56,6 +57,7 @@ private:
   std::shared_ptr<IntrospectionMessage> introspection_;
   std::shared_ptr<MessageSerialization> serialization_;
 };
+*/
 
 }  // namespace generic_type_support
 
