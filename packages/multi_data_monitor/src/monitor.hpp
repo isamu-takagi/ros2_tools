@@ -31,7 +31,7 @@ namespace monitors
 
 class Monitor;
 using MonitorList = std::vector<std::shared_ptr<Monitor>>;
-using MonitorDict = std::map<std::string, std::shared_ptr<Monitor>>;
+using MonitorDict = std::map<std::string, std::unique_ptr<Monitor>>;
 
 class Monitor
 {
@@ -49,12 +49,20 @@ public:
   std::string GetTopicName();
   std::string GetTopicType();
 
+  // TODO: Remove temporary methods
+  bool HasTopic();
+  void SetTypeSupport(const generic_type_support::GenericMessageSupport * support) { support_ = support; }
+  const generic_type_support::GenericMessageSupport * GetTypeSupport() const { return support_; }
+
 protected:
   std::string name_;
   YAML::Node yaml_;
   QWidget * widget_ = nullptr;
   QLayout * layout_ = nullptr;
   generic_type_support::GenericTypeAccess access;
+
+  // TODO: const generic_type_support::GenericMessageSupport * const support_;
+  const generic_type_support::GenericMessageSupport * support_;
 };
 
 }  // namespace monitors

@@ -23,11 +23,11 @@ namespace generic_type_support
 {
 
 GenericMessageSupport::GenericMessageSupport(const std::string & type)
-: introspection_(type), serialization_(type)
+: type_(type), introspection_(type), serialization_(type)
 {
 }
 
-YAML::Node GenericMessageSupport::DeserializeYAML(const rclcpp::SerializedMessage & serialized)
+YAML::Node GenericMessageSupport::DeserializeYAML(const rclcpp::SerializedMessage & serialized) const
 {
   TypeSupportMessageMemory memory(introspection_);
   serialization_.GetSerialization().deserialize_message(&serialized, memory.GetData());

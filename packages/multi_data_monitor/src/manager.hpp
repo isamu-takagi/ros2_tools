@@ -34,9 +34,13 @@ public:
   void Build(QWidget * panel);
 
 private:
-  MonitorDict monitors_;
-  std::vector<std::unique_ptr<TopicSubscription>> subscriptions_;
+  using GenericMessageSupport = generic_type_support::GenericMessageSupport;
   YAML::Node yaml_;
+
+  // NOTE: declaration order for the destructors
+  std::map<std::string, std::unique_ptr<const GenericMessageSupport>> supports_;
+  std::map<std::string, std::unique_ptr<Monitor>> monitors_;
+  std::map<std::string, std::unique_ptr<TopicSubscription>> subscriptions_;
 };
 
 }  // namespace monitors

@@ -28,9 +28,11 @@ class GenericMessageSupport
 {
 public:
   GenericMessageSupport(const std::string & type);
-  YAML::Node DeserializeYAML(const rclcpp::SerializedMessage & serialized);
+  YAML::Node DeserializeYAML(const rclcpp::SerializedMessage & serialized) const;
+  std::string GetTypeName() const { return type_; }
 
 private:
+  const std::string type_;
   const TypeSupportMessage introspection_;
   const TypeSupportSerialization serialization_;
 };

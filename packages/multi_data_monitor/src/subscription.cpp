@@ -19,18 +19,27 @@
 namespace monitors
 {
 
-TopicSubscription::TopicSubscription(const rclcpp::Node::SharedPtr & node, const MonitorList & monitors)
+TopicSubscription::TopicSubscription(const std::string & name, const generic_type_support::GenericMessageSupport * support)
+: name_(name), support_(support)
 {
+}
+
+void TopicSubscription::Add(Monitor * monitor)
+{
+  // TODO: type check
+  monitors_.push_back(monitor);
+}
+
+void TopicSubscription::Start(const rclcpp::Node::SharedPtr & node)
+{
+  std::cout << "start subscription: " << name_ << " " << support_->GetTypeName() << std::endl;
+
   using namespace std::placeholders;
   subscription_ = node->create_generic_subscription(
-  monitors[0]->GetTopicName(),
-  monitors[0]->GetTopicType(),
+  name_,
+  support_->GetTypeName(),
   rclcpp::QoS(1),
   std::bind(&TopicSubscription::Callback, this, _1));
-  std::cout << "create_generic_subscription: " << monitors[0]->GetTopicName() << " " << monitors[0]->GetTopicType() << std::endl;
-
-  monitors_ = monitors;
-  support_ = std::make_unique<generic_type_support::GenericMessageSupport>(monitors[0]->GetTopicType());
 }
 
 void TopicSubscription::Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const

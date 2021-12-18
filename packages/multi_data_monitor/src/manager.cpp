@@ -64,22 +64,22 @@ void Manager::Load(const std::string & path)
 
 void Manager::CreateMonitors()
 {
-  const auto CreateMonitor = [](const std::string & name, const YAML::Node & yaml) -> std::shared_ptr<Monitor>
+  const auto CreateMonitor = [](const std::string & name, const YAML::Node & yaml) -> std::unique_ptr<Monitor>
   {
     const auto type = yaml["class"].as<std::string>();
     std::cout << "create node: " << name << "  " << type << std::endl;
 
     if (type == "matrix")
     {
-      return std::make_shared<Matrix>(name, yaml);
+      return std::make_unique<Matrix>(name, yaml);
     }
     if (type == "titled")
     {
-      return std::make_shared<Titled>(name, yaml);
+      return std::make_unique<Titled>(name, yaml);
     }
     if (type == "simple")
     {
-      return std::make_shared<Simple>(name, yaml);
+      return std::make_unique<Simple>(name, yaml);
     }
 
     std::cout << "  unknown type: " << type << std::endl;
@@ -112,31 +112,45 @@ void Manager::CreateMonitors()
 void Manager::CreateSubscription(const rclcpp::Node::SharedPtr & node)
 {
   std::map<std::string, MonitorList> topics;
-  for (const auto & [_, monitor] : monitors_)
+  for (auto & [_, monitor] : monitors_)
   {
+    if (!monitor->HasTopic()) { continue; }
+    const std::string type = monitor->GetTopicType();
     const std::string name = monitor->GetTopicName();
-    if (!name.empty())
+
+    std::cout << monitor->GetName() << " " <<  type << " " << name << std::endl;
+
+    if (!supports_.count(type))
     {
-      topics[name].push_back(monitor);
+      std::cout << "create support: " << type << std::endl;
+      supports_[type] = std::make_unique<const GenericMessageSupport>(type);
     }
+    const GenericMessageSupport * support = supports_[type].get();
+
+    if (!subscriptions_.count(name))
+    {
+      std::cout << "create subscriptions: " << name << std::endl;
+      subscriptions_[name] = std::make_unique<TopicSubscription>(name, support);
+    }
+    TopicSubscription * subscription = subscriptions_[name].get();
+
+    // TODO: CreateMonitorsと処理をまとめる。Monitorが余分なYAMLを持たなくて済む。
+    monitor->SetTypeSupport(support);
+    subscription->Add(monitor.get());
+
+    std::cout << std::endl;
   }
 
-  for (const auto & topic : topics)
+  for (auto & pair : subscriptions_)
   {
-    std::cout << topic.first << std::endl;
-    for (const auto & monitor : topic.second)
-    {
-      std::cout << "  " << monitor->GetName() << std::endl;
-    }
-    auto subscription = std::make_unique<TopicSubscription>(node, topic.second);
-    subscriptions_.push_back(std::move(subscription));
+    pair.second->Start(node);
   }
 }
 
 void Manager::Build(QWidget * panel)
 {
   const auto name = yaml_["root"].as<std::string>();
-  const auto root = monitors_.at(name);
+  const auto root = monitors_.at(name).get();
   root->Build(monitors_);
 
   const auto widget = root->GetWidget();

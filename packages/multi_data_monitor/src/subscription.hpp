@@ -24,12 +24,17 @@ namespace monitors
 class TopicSubscription
 {
 public:
-  TopicSubscription(const rclcpp::Node::SharedPtr & node, const MonitorList & monitors);
-  void Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const;
+  TopicSubscription(const std::string & name, const generic_type_support::GenericMessageSupport * support);
+  void Add(Monitor * monitor);
+  void Start(const rclcpp::Node::SharedPtr & node);
 
 private:
-  std::unique_ptr<generic_type_support::GenericMessageSupport> support_;
-  MonitorList monitors_;
+  void Callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized) const;
+
+  // No need to release raw pointer since it is a reference to unique pointer.
+  const std::string name_;
+  const generic_type_support::GenericMessageSupport * const support_;
+  std::vector<Monitor *> monitors_;
   rclcpp::GenericSubscription::SharedPtr subscription_;
 };
 

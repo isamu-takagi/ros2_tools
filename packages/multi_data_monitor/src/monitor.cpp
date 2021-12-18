@@ -30,6 +30,11 @@ Monitor::Monitor(const std::string & name, const YAML::Node & yaml)
   }
 }
 
+bool Monitor::HasTopic()
+{
+  return yaml_["topic"];
+}
+
 std::string Monitor::GetName()
 {
   return name_;
