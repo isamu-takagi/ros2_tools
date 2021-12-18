@@ -30,6 +30,7 @@ namespace generic_type_support
 class TypeSupportMessage;
 class TypeSupportService;
 class TypeSupportSerialization;
+class TypeSupportMessageMemory;
 
 class TypeSupportClass;
 class TypeSupportField;
@@ -65,6 +66,8 @@ class TypeSupportClass
 public:
   TypeSupportClass(const IntrospectionMessage & message);
   void Dump() const;
+  void CreateMemory(void *& data);
+  void DeleteMemory(void *& data);
   const auto begin() const { return fields_.begin(); }
   const auto end() const { return fields_.end(); }
 
@@ -95,6 +98,18 @@ public:
 
 private:
   const TypeSupportLibrary library_;
+};
+
+class TypeSupportMessageMemory
+{
+public:
+  TypeSupportMessageMemory(const TypeSupportMessage & message);
+  ~TypeSupportMessageMemory();
+  void * GetData() { return data_; };
+
+private:
+  void * data_;
+  const TypeSupportMessage message_;
 };
 
 }  // namespace generic_type_support

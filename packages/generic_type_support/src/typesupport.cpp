@@ -37,24 +37,6 @@ TypeSupportLibrary TypeSupportLibrary::LoadIntrospection(const std::string & typ
   return TypeSupportLibrary{handle, library};
 }
 
-TypeSupportClass::TypeSupportClass(const IntrospectionMessage & message) : message_(message)
-{
-  for (uint32_t i = 0; i < message_.member_count_; ++i) {
-    fields_.emplace_back(message_.members_[i]);
-  }
-}
-
-void TypeSupportClass::Dump() const
-{
-  std::cout << "namespace     : " << message_.message_namespace_ << std::endl;
-  std::cout << "name          : " << message_.message_name_ << std::endl;
-  std::cout << "member_count  : " << message_.member_count_ << std::endl;
-  std::cout << "size_of       : " << message_.size_of_ << std::endl;
-  std::cout << "members       : " << message_.members_ << std::endl;
-  std::cout << "init_function : " << reinterpret_cast<void *>(message_.init_function) << std::endl;
-  std::cout << "fini_function : " << reinterpret_cast<void *>(message_.fini_function) << std::endl;
-}
-
 TypeSupportField::TypeSupportField(const IntrospectionField & field) : field_(field)
 {
 }
@@ -76,6 +58,37 @@ void TypeSupportField::Dump() const
   std::cout << "resize_function    : " << field_.resize_function << std::endl;
 }
 
+TypeSupportClass::TypeSupportClass(const IntrospectionMessage & message) : message_(message)
+{
+  for (uint32_t i = 0; i < message_.member_count_; ++i) {
+    fields_.emplace_back(message_.members_[i]);
+  }
+}
+
+void TypeSupportClass::Dump() const
+{
+  std::cout << "namespace     : " << message_.message_namespace_ << std::endl;
+  std::cout << "name          : " << message_.message_name_ << std::endl;
+  std::cout << "member_count  : " << message_.member_count_ << std::endl;
+  std::cout << "size_of       : " << message_.size_of_ << std::endl;
+  std::cout << "members       : " << message_.members_ << std::endl;
+  std::cout << "init_function : " << reinterpret_cast<void *>(message_.init_function) << std::endl;
+  std::cout << "fini_function : " << reinterpret_cast<void *>(message_.fini_function) << std::endl;
+}
+
+void TypeSupportClass::CreateMemory(void *& data)
+{
+  data = std::malloc(message_.size_of_);
+  message_.init_function(data, rosidl_runtime_cpp::MessageInitialization::DEFAULTS_ONLY);
+}
+
+void TypeSupportClass::DeleteMemory(void *& data)
+{
+  message_.fini_function(data);
+  std::free(data);
+  data = nullptr;
+}
+
 TypeSupportMessage TypeSupportMessage::Load(const std::string & type)
 {
   return TypeSupportLibrary(TypeSupportLibrary::LoadIntrospection(type));
@@ -87,7 +100,7 @@ TypeSupportMessage::TypeSupportMessage(const TypeSupportLibrary & library) : lib
 
 TypeSupportClass TypeSupportMessage::GetClass() const
 {
-  return TypeSupportClass(*reinterpret_cast<const IntrospectionMessage *>(library_.handle->data));
+  return {*reinterpret_cast<const IntrospectionMessage *>(library_.handle->data)};
 }
 
 TypeSupportSerialization TypeSupportSerialization::Load(const std::string & type)
@@ -98,6 +111,16 @@ TypeSupportSerialization TypeSupportSerialization::Load(const std::string & type
 TypeSupportSerialization::TypeSupportSerialization(const TypeSupportLibrary & library)
 : SerializationBase(library.handle), library_(library)
 {
+}
+
+TypeSupportMessageMemory::TypeSupportMessageMemory(const TypeSupportMessage & message) : message_(message)
+{
+  message_.GetClass().CreateMemory(data_);
+}
+
+TypeSupportMessageMemory::~TypeSupportMessageMemory()
+{
+  message_.GetClass().DeleteMemory(data_);
 }
 
 }  // namespace generic_type_support

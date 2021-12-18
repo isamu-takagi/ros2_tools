@@ -55,12 +55,17 @@ int main()
 {
   const auto support = generic_type_support::TypeSupportMessage::Load("std_msgs/msg/Header");
   const auto message = support.GetClass();
+
+  /*
   message.Dump();
   for (const auto field : message)
   {
     std::cout << std::endl;
     field.Dump();
   }
+  */
+
+  generic_type_support::TypeSupportMessageMemory memory(support);
 
   /*
   rclcpp::init(argc, argv);
