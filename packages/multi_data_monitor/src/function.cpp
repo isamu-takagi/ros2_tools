@@ -87,11 +87,11 @@ SwitchFunction::SwitchFunction(const YAML::Node & yaml)
 FunctionResult SwitchFunction::Apply(const FunctionResult & base) const
 {
   const auto iter = mapping_.find(base.value.as<std::string>());
-  if (iter == mapping_.end())
+  if (iter != mapping_.end())
   {
-    return default_.value_or(base);
+    return BaseFunction::Apply(base, iter->second);
   }
-  return BaseFunction::Apply(base, iter->second);
+  return default_ ? BaseFunction::Apply(base, default_.value()) : base;
 }
 
 PrecisionFunction::PrecisionFunction(const YAML::Node & yaml)

@@ -43,9 +43,7 @@ void Simple::Callback(const YAML::Node & message)
   const auto text = data.as<std::string>();
   if (prev_ != text)
   {
-    std::cout << style_.GetStyleSheet() << std::endl;
     FunctionResult result = rules_.Apply(FunctionResult{data, style_});
-    std::cout << result.style.GetStyleSheet() << std::endl;
 
     label->setText(QString::fromStdString(title_ + result.value.as<std::string>()));
     label->setStyleSheet(QString::fromStdString(kStyleSheet + result.style.GetStyleSheet()));  // TODO: workload reduction
