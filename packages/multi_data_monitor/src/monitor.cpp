@@ -26,7 +26,7 @@ Monitor::Monitor(const std::string & name, const YAML::Node & yaml)
   const auto & field = yaml_["field"]["name"];
   if (field)
   {
-    access = generic_type_support::GeneticTypeAccess(field.as<std::string>());
+    access = generic_type_support::GenericTypeAccess(field.as<std::string>());
   }
 }
 

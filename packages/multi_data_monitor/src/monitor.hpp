@@ -54,7 +54,7 @@ protected:
   YAML::Node yaml_;
   QWidget * widget_ = nullptr;
   QLayout * layout_ = nullptr;
-  generic_type_support::GeneticTypeAccess access;
+  generic_type_support::GenericTypeAccess access;
 };
 
 }  // namespace monitors

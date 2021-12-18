@@ -14,8 +14,9 @@ find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
 ament_auto_add_library(${PROJECT_NAME} SHARED
-  src/typesupport.cpp
   src/message.cpp
+  src/access.cpp
+  src/typesupport.cpp
 )
 
 ament_auto_add_executable(debug

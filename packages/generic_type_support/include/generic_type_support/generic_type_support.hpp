@@ -16,5 +16,6 @@
 #define GENERIC_TYPE_SUPPORT__GENERIC_TYPE_SUPPORT_HPP_
 
 #include "message.hpp"
+#include "access.hpp"
 
 #endif  // GENERIC_TYPE_SUPPORT__GENERIC_TYPE_SUPPORT_HPP_
