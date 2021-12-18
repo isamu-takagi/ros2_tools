@@ -46,6 +46,7 @@ public:
 private:
   std::vector<GenericTypeAccessField> fields;
 };
+*/
 
 class GenericMessageSupport
 {
@@ -54,10 +55,9 @@ public:
   YAML::Node DeserializeYAML(const rclcpp::SerializedMessage & serialized);
 
 private:
-  std::shared_ptr<IntrospectionMessage> introspection_;
-  std::shared_ptr<MessageSerialization> serialization_;
+  const TypeSupportMessage introspection_;
+  const TypeSupportSerialization serialization_;
 };
-*/
 
 }  // namespace generic_type_support
 

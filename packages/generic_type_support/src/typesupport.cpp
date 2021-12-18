@@ -18,6 +18,9 @@
 #include <memory>
 #include <string>
 
+#include <yaml-cpp/yaml.h>
+#include <rosidl_typesupport_introspection_cpp/field_types.hpp>
+
 namespace generic_type_support
 {
 
@@ -58,11 +61,88 @@ void TypeSupportField::Dump() const
   std::cout << "resize_function    : " << field_.resize_function << std::endl;
 }
 
+template<>
+YAML::Node TypeSupportClass::Get(const void * data) const;
+
+YAML::Node GetFieldValue(const void * data, const IntrospectionField & field_)
+{
+  using namespace rosidl_typesupport_introspection_cpp;
+
+  switch (field_.type_id_)
+  {
+    case ROS_TYPE_FLOAT:
+      return YAML::Node(*reinterpret_cast<const float*>(data));
+    case ROS_TYPE_DOUBLE:
+      return YAML::Node(*reinterpret_cast<const double*>(data));
+    case ROS_TYPE_LONG_DOUBLE:
+      return YAML::Node(*reinterpret_cast<const long double*>(data));
+    case ROS_TYPE_CHAR:
+      return YAML::Node(*reinterpret_cast<const char*>(data));
+    case ROS_TYPE_WCHAR:
+      return YAML::Node("[WCHAR IS NOT IMPLEMENTED]");
+    case ROS_TYPE_BOOLEAN:
+      return YAML::Node(*reinterpret_cast<const bool*>(data));
+    case ROS_TYPE_OCTET:
+      return YAML::Node(static_cast<uint32_t>(*reinterpret_cast<const uint8_t*>(data)));
+    case ROS_TYPE_UINT8:
+      return YAML::Node(static_cast<uint32_t>(*reinterpret_cast<const uint8_t*>(data)));
+    case ROS_TYPE_INT8:
+      return YAML::Node(static_cast<int32_t>(*reinterpret_cast<const int8_t*>(data)));
+    case ROS_TYPE_UINT16:
+      return YAML::Node(*reinterpret_cast<const uint16_t*>(data));
+    case ROS_TYPE_INT16:
+      return YAML::Node(*reinterpret_cast<const int16_t*>(data));
+    case ROS_TYPE_UINT32:
+      return YAML::Node(*reinterpret_cast<const uint32_t*>(data));
+    case ROS_TYPE_INT32:
+      return YAML::Node(*reinterpret_cast<const int32_t*>(data));
+    case ROS_TYPE_UINT64:
+      return YAML::Node(*reinterpret_cast<const uint64_t*>(data));
+    case ROS_TYPE_INT64:
+      return YAML::Node(*reinterpret_cast<const int64_t*>(data));
+    case ROS_TYPE_STRING:
+      return YAML::Node(*reinterpret_cast<const std::string*>(data));
+    case ROS_TYPE_WSTRING:
+      return YAML::Node("[WSTRING IS NOT IMPLEMENTED]");
+    case ROS_TYPE_MESSAGE:
+      return TypeSupportClass(field_.members_).Get<YAML::Node>(data);
+  }
+  return YAML::Node("[PARSE_ERROR]");
+}
+
+YAML::Node GetFieldArray(const void * data, const IntrospectionField & field_)
+{
+  YAML::Node node;
+  size_t size = field_.size_function(data);
+  for (size_t i = 0; i < size; ++i)
+  {
+    const void * element = field_.get_const_function(data, i);
+    node.push_back(GetFieldValue(element, field_));
+  }
+  return node;
+}
+
+template<>
+YAML::Node TypeSupportField::Get(const void * data) const
+{
+  data = static_cast<const uint8_t*>(data) + field_.offset_;
+  if (field_.is_array_)
+  {
+    return GetFieldArray(data, field_);
+  }
+  return GetFieldValue(data, field_);
+}
+
 TypeSupportClass::TypeSupportClass(const IntrospectionMessage & message) : message_(message)
 {
   for (uint32_t i = 0; i < message_.member_count_; ++i) {
     fields_.emplace_back(message_.members_[i]);
   }
+}
+
+TypeSupportClass::TypeSupportClass(const TypeSupportHandle * handle)
+: TypeSupportClass(*reinterpret_cast<const IntrospectionMessage *>(handle->data))
+{
 }
 
 void TypeSupportClass::Dump() const
@@ -89,31 +169,39 @@ void TypeSupportClass::DeleteMemory(void *& data)
   data = nullptr;
 }
 
-TypeSupportMessage TypeSupportMessage::Load(const std::string & type)
+template<>
+YAML::Node TypeSupportClass::Get(const void * data) const
 {
-  return TypeSupportLibrary(TypeSupportLibrary::LoadIntrospection(type));
+  YAML::Node node;
+  for (const auto field : fields_)
+  {
+    node[field.GetName()] = field.Get<YAML::Node>(data);
+  }
+  return node;
 }
 
-TypeSupportMessage::TypeSupportMessage(const TypeSupportLibrary & library) : library_(library)
+TypeSupportMessage::TypeSupportMessage(const std::string & type)
+: library_(TypeSupportLibrary::LoadIntrospection(type))
 {
 }
 
 TypeSupportClass TypeSupportMessage::GetClass() const
 {
-  return {*reinterpret_cast<const IntrospectionMessage *>(library_.handle->data)};
+  return TypeSupportClass(library_.handle);
 }
 
-TypeSupportSerialization TypeSupportSerialization::Load(const std::string & type)
-{
-  return TypeSupportLibrary(TypeSupportLibrary::LoadIntrospection(type));
-}
-
-TypeSupportSerialization::TypeSupportSerialization(const TypeSupportLibrary & library)
-: SerializationBase(library.handle), library_(library)
+TypeSupportSerialization::TypeSupportSerialization(const std::string & type)
+: library_(TypeSupportLibrary::LoadIntrospection(type)), serialization_(library_.handle)
 {
 }
 
-TypeSupportMessageMemory::TypeSupportMessageMemory(const TypeSupportMessage & message) : message_(message)
+const rclcpp::SerializationBase & TypeSupportSerialization::GetSerialization() const
+{
+  return serialization_;
+}
+
+TypeSupportMessageMemory::TypeSupportMessageMemory(const TypeSupportMessage & message)
+: message_(message)
 {
   message_.GetClass().CreateMemory(data_);
 }

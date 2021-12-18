@@ -19,7 +19,7 @@
 
 TEST(generic_type_support, test1)
 {
-  const auto support = generic_type_support::TypeSupportMessage::Load("std_msgs/msg/Header");
+  const auto support = generic_type_support::TypeSupportMessage("std_msgs/msg/Header");
   const auto message = support.GetClass();
 }
 

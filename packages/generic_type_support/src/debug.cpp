@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//#include "generic_type_support/message.hpp"
-#include "generic_type_support/typesupport.hpp"
+#include "generic_type_support/message.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <rclcpp/rclcpp.hpp>
 
-/*
 std::ostream& operator<<(std::ostream& os, const rclcpp::SerializedMessage & msg)
 {
   const auto array = msg.get_rcl_serialized_message();
@@ -48,26 +46,9 @@ void callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized)
 
   rclcpp::shutdown();
 }
-*/
 
-int main()
-//int main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-  const auto support = generic_type_support::TypeSupportMessage::Load("std_msgs/msg/Header");
-  const auto message = support.GetClass();
-
-  /*
-  message.Dump();
-  for (const auto field : message)
-  {
-    std::cout << std::endl;
-    field.Dump();
-  }
-  */
-
-  generic_type_support::TypeSupportMessageMemory memory(support);
-
-  /*
   rclcpp::init(argc, argv);
   auto node = std::make_shared<rclcpp::Node>("generic");
   auto type = node->declare_parameter("type", "std_msgs/msg/Header");
@@ -78,5 +59,4 @@ int main()
 
   rclcpp::spin(node);
   rclcpp::shutdown();
-  */
 }

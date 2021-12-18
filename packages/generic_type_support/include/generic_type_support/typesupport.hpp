@@ -55,6 +55,10 @@ class TypeSupportField
 public:
   TypeSupportField(const IntrospectionField & field);
   void Dump() const;
+  std::string GetName() const { return field_.name_; }
+
+  template<class T>
+  T Get(const void * data) const;
 
 private:
   const IntrospectionField & field_;
@@ -65,11 +69,15 @@ class TypeSupportClass
 {
 public:
   TypeSupportClass(const IntrospectionMessage & message);
+  TypeSupportClass(const TypeSupportHandle * handle);
   void Dump() const;
   void CreateMemory(void *& data);
   void DeleteMemory(void *& data);
-  const auto begin() const { return fields_.begin(); }
-  const auto end() const { return fields_.end(); }
+  // const auto begin() const { return fields_.begin(); }
+  // const auto end() const { return fields_.end(); }
+
+  template<class T>
+  T Get(const void * data) const;
 
 private:
   const IntrospectionMessage & message_;
@@ -80,24 +88,24 @@ private:
 class TypeSupportMessage
 {
 public:
-  static TypeSupportMessage Load(const std::string & type);
-  TypeSupportMessage(const TypeSupportLibrary & library);
+  TypeSupportMessage(const std::string & type);
   TypeSupportClass GetClass() const;
-  bool HasField();
 
 private:
   const TypeSupportLibrary library_;
+  // const TypeSupportClass and GetClass returns reference
 };
 
 // This is the interface class.
-class TypeSupportSerialization : public rclcpp::SerializationBase
+class TypeSupportSerialization
 {
 public:
-  static TypeSupportSerialization Load(const std::string & type);
-  TypeSupportSerialization(const TypeSupportLibrary & library);
+  TypeSupportSerialization(const std::string & type);
+  const rclcpp::SerializationBase & GetSerialization() const;
 
 private:
   const TypeSupportLibrary library_;
+  const rclcpp::SerializationBase serialization_;
 };
 
 class TypeSupportMessageMemory
