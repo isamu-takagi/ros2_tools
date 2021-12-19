@@ -53,26 +53,33 @@ struct TypeSupportLibrary
 class TypeSupportField
 {
 public:
-  TypeSupportField(const IntrospectionField & field);
+  TypeSupportField(const IntrospectionField * field);
   void Dump() const;
-  std::string GetName() const { return field_.name_; }
+  std::string GetName() const { return field_->name_; }
+  bool IsClass() const;
+  bool IsArray() const;
+  bool HasIndex(size_t index) const;
+  TypeSupportClass GetClass() const;
 
   template<class T>
   T Get(const void * data) const;
 
 private:
-  const IntrospectionField & field_;
+  const IntrospectionField * field_;
 };
 
 // Do not create this class directly.
 class TypeSupportClass
 {
 public:
-  TypeSupportClass(const IntrospectionMessage & message);
+  TypeSupportClass(const IntrospectionMessage * message);
   TypeSupportClass(const TypeSupportHandle * handle);
   void Dump() const;
   void CreateMemory(void *& data);
   void DeleteMemory(void *& data);
+  bool HasField(const std::string & name) const;
+  TypeSupportField GetField(const std::string & name) const;
+
   // const auto begin() const { return fields_.begin(); }
   // const auto end() const { return fields_.end(); }
 
@@ -80,7 +87,7 @@ public:
   T Get(const void * data) const;
 
 private:
-  const IntrospectionMessage & message_;
+  const IntrospectionMessage * message_;
   std::vector<TypeSupportField> fields_;
 };
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "generic_type_support/message.hpp"
+#include "generic_type_support/access.hpp"
 
 #include <yaml-cpp/yaml.h>
 #include <iostream>
@@ -35,13 +36,13 @@ std::ostream& operator<<(std::ostream& os, const rclcpp::SerializedMessage & msg
   return os;
 }
 
-std::shared_ptr<generic_type_support::GenericMessageSupport> support;
+std::shared_ptr<generic_type_support::GenericMessageSupport> support_;
 void callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized)
 {
   std::cout << "==================== Message1 ====================" << std::endl;
   std::cout << *serialized << std::endl;
   std::cout << "==================== Message2 ====================" << std::endl;
-  std::cout << support->DeserializeYAML(*serialized) << std::endl;
+  std::cout << support_->DeserializeYAML(*serialized) << std::endl;
   std::cout << "==================================================" << std::endl;
 
   rclcpp::shutdown();
@@ -49,13 +50,20 @@ void callback(const std::shared_ptr<rclcpp::SerializedMessage> serialized)
 
 int main(int argc, char **argv)
 {
+  generic_type_support::GenericTypeAccess access("stamp.nsec");
+  generic_type_support::GenericMessageSupport support("std_msgs/msg/Header");
+  access.Validate(support.GetClass());
+
+
+  return 0;
+
   rclcpp::init(argc, argv);
   auto node = std::make_shared<rclcpp::Node>("generic");
   auto type = node->declare_parameter("type", "std_msgs/msg/Header");
   auto subs = node->create_generic_subscription("/generic", type, rclcpp::QoS(1), callback);
 
   RCLCPP_INFO(node->get_logger(), "type: %s", type.c_str());
-  support = std::make_shared<generic_type_support::GenericMessageSupport>(type);
+  support_ = std::make_shared<generic_type_support::GenericMessageSupport>(type);
 
   rclcpp::spin(node);
   rclcpp::shutdown();

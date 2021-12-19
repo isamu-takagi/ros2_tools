@@ -14,31 +14,51 @@
 
 #include "generic_type_support/access.hpp"
 
+#include <iostream>
+
 namespace generic_type_support
 {
 
-std::vector<std::string> split(const std::string & input)
+std::vector<std::string> split(const std::string & input, char delimiter)
 {
   std::vector<std::string> result;
-  size_t found = input.find('.');
+  size_t found = input.find(delimiter);
   size_t start = 0;
   while(found != std::string::npos)
   {
     result.push_back(input.substr(start, found - start));
     start = found + 1;
-    found = input.find('.', start);
+    found = input.find(delimiter, start);
   }
   result.push_back(input.substr(start));
   return result;
 }
 
+GenericTypeAccessField::GenericTypeAccessField(const std::string field)
+{
+  const auto token = split(field, '@');
+  if (token.size() == 1)
+  {
+    type = Type::VALUE;
+    name = token[0];
+    index = 0;
+    return;
+  }
+  if (token.size() == 2)
+  {
+    type = Type::LIST;
+    name = token[0];
+    index = std::stoi(token[1]);
+    return;
+  }
+  throw std::runtime_error("Invalid field '" + field + "'");
+}
+
 GenericTypeAccess::GenericTypeAccess(const std::string access)
 {
-  for (const auto & name : split(access))
+  for (const auto & field : split(access, '.'))
   {
-    GenericTypeAccessField field;
-    field.name = name;
-    fields.push_back(field);
+    fields.emplace_back(field);
   }
   debug = access;
 }
@@ -51,6 +71,12 @@ const YAML::Node GenericTypeAccess::Get(const YAML::Node & yaml) const
     node.reset(node[field.name]);
   }
   return node;
+}
+
+
+bool GenericTypeAccess::Validate(const TypeSupportClass & support) const
+{
+  return true;
 }
 
 }  // namespace generic_type_support

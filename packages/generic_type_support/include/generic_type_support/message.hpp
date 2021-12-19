@@ -30,6 +30,7 @@ public:
   GenericMessageSupport(const std::string & type);
   YAML::Node DeserializeYAML(const rclcpp::SerializedMessage & serialized) const;
   std::string GetTypeName() const { return type_; }
+  TypeSupportClass GetClass() const { return introspection_.GetClass(); }
 
 private:
   const std::string type_;

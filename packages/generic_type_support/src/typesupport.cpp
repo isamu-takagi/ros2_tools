@@ -40,25 +40,54 @@ TypeSupportLibrary TypeSupportLibrary::LoadIntrospection(const std::string & typ
   return TypeSupportLibrary{handle, library};
 }
 
-TypeSupportField::TypeSupportField(const IntrospectionField & field) : field_(field)
+TypeSupportField::TypeSupportField(const IntrospectionField * field) : field_(field)
 {
 }
 
 void TypeSupportField::Dump() const
 {
-  std::cout << "name               : " << field_.name_ << std::endl;
-  std::cout << "type_id            : " << static_cast<uint32_t>(field_.type_id_) << std::endl;
-  std::cout << "string_upper_bound : " << field_.string_upper_bound_ << std::endl;
-  std::cout << "members            : " << field_.members_ << std::endl;
-  std::cout << "is_array           : " << field_.is_array_ << std::endl;
-  std::cout << "array_size         : " << field_.array_size_ << std::endl;
-  std::cout << "is_upper_bound     : " << field_.is_upper_bound_ << std::endl;
-  std::cout << "offset             : " << field_.offset_ << std::endl;
-  std::cout << "default_value      : " << field_.default_value_ << std::endl;
-  std::cout << "size_function      : " << field_.size_function << std::endl;
-  std::cout << "get_const_function : " << field_.get_const_function << std::endl;
-  std::cout << "get_function       : " << field_.get_function << std::endl;
-  std::cout << "resize_function    : " << field_.resize_function << std::endl;
+  std::cout << "name               : " << field_->name_ << std::endl;
+  std::cout << "type_id            : " << static_cast<uint32_t>(field_->type_id_) << std::endl;
+  std::cout << "string_upper_bound : " << field_->string_upper_bound_ << std::endl;
+  std::cout << "members            : " << field_->members_ << std::endl;
+  std::cout << "is_array           : " << field_->is_array_ << std::endl;
+  std::cout << "array_size         : " << field_->array_size_ << std::endl;
+  std::cout << "is_upper_bound     : " << field_->is_upper_bound_ << std::endl;
+  std::cout << "offset             : " << field_->offset_ << std::endl;
+  std::cout << "default_value      : " << field_->default_value_ << std::endl;
+  std::cout << "size_function      : " << field_->size_function << std::endl;
+  std::cout << "get_const_function : " << field_->get_const_function << std::endl;
+  std::cout << "get_function       : " << field_->get_function << std::endl;
+  std::cout << "resize_function    : " << field_->resize_function << std::endl;
+}
+
+bool TypeSupportField::IsClass() const
+{
+  return field_->type_id_ == rosidl_typesupport_introspection_cpp::ROS_TYPE_MESSAGE;
+}
+
+bool TypeSupportField::IsArray() const
+{
+  return field_->is_array_;
+}
+
+bool TypeSupportField::HasIndex(size_t index) const
+{
+  if (field_->array_size_ == 0)
+  {
+    return true;  // dynamic
+  }
+  return index < field_->array_size_;  // fixed or bounded
+}
+
+TypeSupportClass TypeSupportField::GetClass() const
+{
+  if (IsClass())
+  {
+    return TypeSupportClass(field_->members_);
+  }
+  // TODO: class name for improvement
+  throw std::runtime_error(field_->name_ + std::string(" is not class"));
 }
 
 template<>
@@ -125,48 +154,70 @@ YAML::Node GetFieldArray(const void * data, const IntrospectionField & field_)
 template<>
 YAML::Node TypeSupportField::Get(const void * data) const
 {
-  data = static_cast<const uint8_t*>(data) + field_.offset_;
-  if (field_.is_array_)
+  data = static_cast<const uint8_t*>(data) + field_->offset_;
+  if (field_->is_array_)
   {
-    return GetFieldArray(data, field_);
+    return GetFieldArray(data, *field_);
   }
-  return GetFieldValue(data, field_);
+  return GetFieldValue(data, *field_);
 }
 
-TypeSupportClass::TypeSupportClass(const IntrospectionMessage & message) : message_(message)
+TypeSupportClass::TypeSupportClass(const IntrospectionMessage * message) : message_(message)
 {
-  for (uint32_t i = 0; i < message_.member_count_; ++i) {
-    fields_.emplace_back(message_.members_[i]);
+  for (uint32_t i = 0; i < message_->member_count_; ++i)
+  {
+    fields_.emplace_back(message_->members_ + i);
   }
 }
 
 TypeSupportClass::TypeSupportClass(const TypeSupportHandle * handle)
-: TypeSupportClass(*reinterpret_cast<const IntrospectionMessage *>(handle->data))
+: TypeSupportClass(reinterpret_cast<const IntrospectionMessage *>(handle->data))
 {
 }
 
 void TypeSupportClass::Dump() const
 {
-  std::cout << "namespace     : " << message_.message_namespace_ << std::endl;
-  std::cout << "name          : " << message_.message_name_ << std::endl;
-  std::cout << "member_count  : " << message_.member_count_ << std::endl;
-  std::cout << "size_of       : " << message_.size_of_ << std::endl;
-  std::cout << "members       : " << message_.members_ << std::endl;
-  std::cout << "init_function : " << reinterpret_cast<void *>(message_.init_function) << std::endl;
-  std::cout << "fini_function : " << reinterpret_cast<void *>(message_.fini_function) << std::endl;
+  std::cout << "namespace     : " << message_->message_namespace_ << std::endl;
+  std::cout << "name          : " << message_->message_name_ << std::endl;
+  std::cout << "member_count  : " << message_->member_count_ << std::endl;
+  std::cout << "size_of       : " << message_->size_of_ << std::endl;
+  std::cout << "members       : " << message_->members_ << std::endl;
+  std::cout << "init_function : " << reinterpret_cast<void *>(message_->init_function) << std::endl;
+  std::cout << "fini_function : " << reinterpret_cast<void *>(message_->fini_function) << std::endl;
 }
 
 void TypeSupportClass::CreateMemory(void *& data)
 {
-  data = std::malloc(message_.size_of_);
-  message_.init_function(data, rosidl_runtime_cpp::MessageInitialization::DEFAULTS_ONLY);
+  data = std::malloc(message_->size_of_);
+  message_->init_function(data, rosidl_runtime_cpp::MessageInitialization::DEFAULTS_ONLY);
 }
 
 void TypeSupportClass::DeleteMemory(void *& data)
 {
-  message_.fini_function(data);
+  message_->fini_function(data);
   std::free(data);
   data = nullptr;
+}
+
+bool TypeSupportClass::HasField(const std::string & name) const
+{
+  // TODO: improve algorithm
+  for (const auto field : fields_)
+  {
+    if (name == field.GetName()) { return true; }
+  }
+  return false;
+}
+
+TypeSupportField TypeSupportClass::GetField(const std::string & name) const
+{
+  // TODO: improve algorithm
+  for (const auto field : fields_)
+  {
+    if (name == field.GetName()) { return field; }
+  }
+  const auto message = message_->message_namespace_ + std::string("::") +  message_->message_name_;
+  throw std::runtime_error("Field '" + name +"' is not a member of '" + message + "'");
 }
 
 template<>

@@ -15,6 +15,8 @@
 #ifndef GENERIC_TYPE_SUPPORT__ACCESS_HPP_
 #define GENERIC_TYPE_SUPPORT__ACCESS_HPP_
 
+#include "typesupport.hpp"
+
 #include <yaml-cpp/yaml.h>
 #include <string>
 #include <vector>
@@ -25,6 +27,7 @@ namespace generic_type_support
 struct GenericTypeAccessField
 {
   enum class Type {VALUE, LIST};
+  explicit GenericTypeAccessField(const std::string field);
 
   Type type;
   std::string name;
@@ -37,10 +40,11 @@ public:
   GenericTypeAccess() = default;
   GenericTypeAccess(const std::string access);
   const YAML::Node Get(const YAML::Node & yaml) const;
+  bool Validate(const TypeSupportClass & support) const;
 
 public:
   std::string debug;
-private:
+//private: TODO: debug
   std::vector<GenericTypeAccessField> fields;
 };
 
