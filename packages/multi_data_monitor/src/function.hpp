@@ -77,4 +77,14 @@ private:
   double coefficient_;
 };
 
+class LinesFunction : public BaseFunction
+{
+public:
+  LinesFunction(const YAML::Node & yaml);
+  FunctionResult Apply(const FunctionResult & base) const override;
+
+private:
+  int lines_;
+};
+
 #endif  // FUNCTION_HPP_

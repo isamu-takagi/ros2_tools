@@ -25,6 +25,9 @@
 // debug
 #include <iostream>
 
+// lines
+#include <algorithm>
+
 
 std::unique_ptr<BaseFunction> CreateFunction(const YAML::Node & rule)
 {
@@ -40,6 +43,10 @@ std::unique_ptr<BaseFunction> CreateFunction(const YAML::Node & rule)
   if (func == "units")
   {
     return std::make_unique<UnitsFunction>(rule);
+  }
+  if (func == "lines")
+  {
+    return std::make_unique<LinesFunction>(rule);
   }
   std::cout << "unknown function" << std::endl;
   return nullptr;
@@ -123,4 +130,17 @@ FunctionResult UnitsFunction::Apply(const FunctionResult & base) const
 {
   double value = coefficient_ * base.value.as<double>();
   return FunctionResult{YAML::Node(value), base.style};
+}
+
+LinesFunction::LinesFunction(const YAML::Node & yaml)
+{
+  lines_ = yaml["args"].as<int>();
+}
+
+FunctionResult LinesFunction::Apply(const FunctionResult & base) const
+{
+  const auto value = base.value.as<std::string>();
+  const auto count = std::count(value.begin(), value.end(), '\n');
+  const auto lines = std::string(std::max(0L, lines_ - count - 1), '\n');
+  return FunctionResult{YAML::Node(value + lines), base.style};
 }
