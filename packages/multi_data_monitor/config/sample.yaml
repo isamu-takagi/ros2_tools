@@ -46,7 +46,7 @@ monitors:
     title: Nanosecond
     style:
       title: {font-size: 12}
-      value: {font-size: 12}
+      value: {font-size: 24}
 
   data_name_3:
     class: titled
@@ -62,6 +62,8 @@ monitors:
     topic: {name: /monitor/header, type: std_msgs/msg/Header}
     field: {name: frame_id}
     style: {font-size: 24}
+    rules:
+      - {func: lines, args: 2}
 
   data_name_5:
     class: simple
