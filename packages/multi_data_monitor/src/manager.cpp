@@ -136,6 +136,7 @@ void Manager::CreateSubscription(const rclcpp::Node::SharedPtr & node)
 
     // TODO: CreateMonitorsと処理をまとめる。Monitorが余分なYAMLを持たなくて済む。
     monitor->SetTypeSupport(support);
+    monitor->ValidateField();
     subscription->Add(monitor.get());
 
     std::cout << std::endl;
