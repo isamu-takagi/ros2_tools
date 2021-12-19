@@ -43,9 +43,8 @@ public:
   bool Validate(const TypeSupportClass & support) const;
 
 public:
-  std::string debug;
-//private: TODO: debug
-  std::vector<GenericTypeAccessField> fields;
+  std::string access_;  // TODO: remove debug value
+  std::vector<GenericTypeAccessField> fields_;
 };
 
 }  // namespace generic_type_support

@@ -26,7 +26,12 @@ TopicSubscription::TopicSubscription(const std::string & name, const generic_typ
 
 void TopicSubscription::Add(Monitor * monitor)
 {
-  // TODO: type check
+  if (support_ != monitor->GetTypeSupport())
+  {
+    const auto type1 = support_->GetTypeName();
+    const auto type2 = monitor->GetTypeSupport()->GetTypeName();
+    throw std::runtime_error("Topic '" + name_ + "' has multiple types [" + type1 + ", " + type2 + "]");
+  }
   monitors_.push_back(monitor);
 }
 

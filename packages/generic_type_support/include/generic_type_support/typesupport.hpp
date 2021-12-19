@@ -75,6 +75,7 @@ public:
   TypeSupportClass(const IntrospectionMessage * message);
   TypeSupportClass(const TypeSupportHandle * handle);
   void Dump() const;
+  std::string GetFullName() const;
   void CreateMemory(void *& data);
   void DeleteMemory(void *& data);
   bool HasField(const std::string & name) const;

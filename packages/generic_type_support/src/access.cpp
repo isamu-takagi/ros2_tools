@@ -14,8 +14,6 @@
 
 #include "generic_type_support/access.hpp"
 
-#include <iostream>
-
 namespace generic_type_support
 {
 
@@ -58,15 +56,15 @@ GenericTypeAccess::GenericTypeAccess(const std::string access)
 {
   for (const auto & field : split(access, '.'))
   {
-    fields.emplace_back(field);
+    fields_.emplace_back(field);
   }
-  debug = access;
+  access_ = access;
 }
 
 const YAML::Node GenericTypeAccess::Get(const YAML::Node & yaml) const
 {
   YAML::Node node = yaml;
-  for (const auto & field : fields)
+  for (const auto & field : fields_)
   {
     node.reset(node[field.name]);
   }
@@ -74,8 +72,34 @@ const YAML::Node GenericTypeAccess::Get(const YAML::Node & yaml) const
 }
 
 
+
 bool GenericTypeAccess::Validate(const TypeSupportClass & support) const
 {
+  TypeSupportClass support_class = support;
+  for (auto iter = fields_.begin(); iter != fields_.end(); ++iter)
+  {
+    const auto & field = *iter;
+    if (!support_class.HasField(field.name))
+    {
+      throw std::runtime_error("Field '" + access_ +"' is not a member of '" + support.GetFullName() + "'");
+    }
+
+    TypeSupportField support_field = support_class.GetField(field.name);
+    if (iter != std::prev(fields_.end()))
+    {
+      if (support_field.IsClass())
+      {
+        support_class = support_field.GetClass();
+        continue;
+      }
+      throw std::runtime_error("Field '" + access_ +"' is not a member of '" + support.GetFullName() + "'");
+    }
+
+    if (support_field.IsClass())
+    {
+      throw std::runtime_error("Field '" + access_ +"' in '" + support.GetFullName() + "' is not a primitive type");
+    }
+  }
   return true;
 }
 

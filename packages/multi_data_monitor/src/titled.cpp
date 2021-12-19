@@ -49,7 +49,7 @@ void Titled::Build([[maybe_unused]] MonitorDict & monitors)
 
 void Titled::Callback(const YAML::Node & message)
 {
-  const auto data = YAML::Clone(access.Get(message));
+  const auto data = YAML::Clone(access_.Get(message));
   StyleDefinition default_style;  // TODO: implement default style
   FunctionResult result = rules_.Apply({data, default_style});
 

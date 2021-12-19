@@ -21,7 +21,7 @@
 #include <memory>
 
 #include <iostream>  // DEBUG
-#include <generic_type_support/generic_type_support.hpp>  // DEBUG
+#include <generic_type_support/generic_type_support.hpp>  // DEBUG, move src
 
 class QWidget;
 class QLayout;
@@ -51,6 +51,7 @@ public:
 
   // TODO: Remove temporary methods
   bool HasTopic();
+  void ValidateField() { access_.Validate(support_->GetClass()); };
   void SetTypeSupport(const generic_type_support::GenericMessageSupport * support) { support_ = support; }
   const generic_type_support::GenericMessageSupport * GetTypeSupport() const { return support_; }
 
@@ -59,7 +60,7 @@ protected:
   YAML::Node yaml_;
   QWidget * widget_ = nullptr;
   QLayout * layout_ = nullptr;
-  generic_type_support::GenericTypeAccess access;
+  generic_type_support::GenericTypeAccess access_;
 
   // TODO: const generic_type_support::GenericMessageSupport * const support_;
   const generic_type_support::GenericMessageSupport * support_;

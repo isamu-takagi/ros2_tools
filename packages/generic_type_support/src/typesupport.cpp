@@ -186,6 +186,11 @@ void TypeSupportClass::Dump() const
   std::cout << "fini_function : " << reinterpret_cast<void *>(message_->fini_function) << std::endl;
 }
 
+std::string TypeSupportClass::GetFullName() const
+{
+  return message_->message_namespace_ + std::string("::") +  message_->message_name_;
+}
+
 void TypeSupportClass::CreateMemory(void *& data)
 {
   data = std::malloc(message_->size_of_);
@@ -216,8 +221,7 @@ TypeSupportField TypeSupportClass::GetField(const std::string & name) const
   {
     if (name == field.GetName()) { return field; }
   }
-  const auto message = message_->message_namespace_ + std::string("::") +  message_->message_name_;
-  throw std::runtime_error("Field '" + name +"' is not a member of '" + message + "'");
+  throw std::runtime_error("Field '" + name +"' is not a member of '" + GetFullName() + "'");
 }
 
 template<>
