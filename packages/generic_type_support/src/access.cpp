@@ -66,15 +66,24 @@ const YAML::Node GenericTypeAccess::Get(const YAML::Node & yaml) const
   YAML::Node node = yaml;
   for (const auto & field : fields_)
   {
-    node.reset(node[field.name]);
+    switch (field.type)
+    {
+      case GenericTypeAccessField::Type::VALUE:
+        node.reset(node[field.name]);
+        break;
+
+      case GenericTypeAccessField::Type::LIST:
+        node.reset(node[field.name][field.index]);
+        break;
+    }
   }
   return node;
 }
 
-
-
 bool GenericTypeAccess::Validate(const TypeSupportClass & support) const
 {
+  // TODO: check array index
+
   TypeSupportClass support_class = support;
   for (auto iter = fields_.begin(); iter != fields_.end(); ++iter)
   {

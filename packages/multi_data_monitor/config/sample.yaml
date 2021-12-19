@@ -32,6 +32,7 @@ monitors:
       - data_name_3
       - data_name_4
       - data_name_5
+      - data_name_6
 
   data_name_1:
     class: titled
@@ -77,3 +78,8 @@ monitors:
           1: {value: A, style: {back-color: "#FF00FF"}}
           2: {value: B, style: {back-color: "#00FF00"}}
           3: {value: C, style: {back-color: "#00FFFF"}}
+
+  data_name_6:
+    class: simple
+    topic: {name: /monitor/array, type: std_msgs/msg/Int32MultiArray}
+    field: {name: data@0}
