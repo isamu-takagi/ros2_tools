@@ -25,7 +25,7 @@ class TopicSubscription
 {
 public:
   TopicSubscription(const std::string & name, const generic_type_support::GenericMessageSupport * support);
-  void Add(Monitor * monitor);
+  void Add(Monitor * monitor, const YAML::Node & qos);
   void Start(const rclcpp::Node::SharedPtr & node);
 
 private:
@@ -36,6 +36,12 @@ private:
   const generic_type_support::GenericMessageSupport * const support_;
   std::vector<Monitor *> monitors_;
   rclcpp::GenericSubscription::SharedPtr subscription_;
+
+  // temporary
+  bool qos_empty;
+  size_t qos_depth;
+  std::string qos_reliability;
+  std::string qos_durability;
 };
 
 }  // namespace monitors

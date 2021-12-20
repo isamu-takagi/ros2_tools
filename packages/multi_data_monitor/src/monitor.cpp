@@ -30,27 +30,7 @@ Monitor::Monitor(const std::string & name, const YAML::Node & yaml)
   }
 }
 
-bool Monitor::HasTopic()
-{
-  return yaml_["topic"];
-}
 
-std::string Monitor::GetName()
-{
-  return name_;
-}
-
-std::string Monitor::GetTopicName()
-{
-  const auto & name = yaml_["topic"]["name"];
-  return name ? name.as<std::string>() : "";
-}
-
-std::string Monitor::GetTopicType()
-{
-  const auto & type = yaml_["topic"]["type"];
-  return type ? type.as<std::string>() : "";
-}
 
 /*
 void NodeBase::AddChild(QWidget * parent, const std::unique_ptr<NodeBase> & base)

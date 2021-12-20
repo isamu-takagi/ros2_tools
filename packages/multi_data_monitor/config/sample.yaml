@@ -81,5 +81,5 @@ monitors:
 
   data_name_6:
     class: simple
-    topic: {name: /monitor/array, type: std_msgs/msg/Int32MultiArray}
+    topic: {name: /monitor/array, type: std_msgs/msg/Int32MultiArray, qos: {durability: transient_local}}
     field: {name: data@0}

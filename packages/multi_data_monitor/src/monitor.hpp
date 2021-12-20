@@ -45,12 +45,10 @@ public:
   virtual void Build(MonitorDict & monitors) = 0;
   virtual void Callback([[maybe_unused]] const YAML::Node & message) {}
 
-  std::string GetName();
-  std::string GetTopicName();
-  std::string GetTopicType();
+  std::string GetName() { return name_; }
 
   // TODO: Remove temporary methods
-  bool HasTopic();
+  YAML::Node GetTopic() { return yaml_["topic"]; }
   void ValidateField() { access_.Validate(support_->GetClass()); };
   void SetTypeSupport(const generic_type_support::GenericMessageSupport * support) { support_ = support; }
   const generic_type_support::GenericMessageSupport * GetTypeSupport() const { return support_; }

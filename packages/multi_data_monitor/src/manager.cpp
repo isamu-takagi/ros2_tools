@@ -114,9 +114,10 @@ void Manager::CreateSubscription(const rclcpp::Node::SharedPtr & node)
   std::map<std::string, MonitorList> topics;
   for (auto & [_, monitor] : monitors_)
   {
-    if (!monitor->HasTopic()) { continue; }
-    const std::string type = monitor->GetTopicType();
-    const std::string name = monitor->GetTopicName();
+    const auto topic = monitor->GetTopic();
+    if (!topic) { continue; }
+    const auto type = topic["type"].as<std::string>();
+    const auto name = topic["name"].as<std::string>();
 
     std::cout << monitor->GetName() << " " <<  type << " " << name << std::endl;
 
@@ -137,7 +138,7 @@ void Manager::CreateSubscription(const rclcpp::Node::SharedPtr & node)
     // TODO: CreateMonitorsと処理をまとめる。Monitorが余分なYAMLを持たなくて済む。
     monitor->SetTypeSupport(support);
     monitor->ValidateField();
-    subscription->Add(monitor.get());
+    subscription->Add(monitor.get(), topic["qos"]);
 
     std::cout << std::endl;
   }
